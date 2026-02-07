@@ -1,10 +1,23 @@
-import Image from "next/image";
+import Hero from '@/components/hero';
+import About from '@/components/about';
+import Skills from '@/components/skills';
+import Experience from '@/components/experience';
+import Projects from '@/components/projects';
+import Education from '@/components/education';
+import Certifications from '@/components/certifications';
+import Contact from '@/components/contact';
 
 export default function Home() {
   return (
-   <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-    <h1 className="text-3xl font-bold text-gray-800">Welcome to the Home Page</h1>
-    
-   </div>
+    <main className="w-full">
+      <Hero />
+      <About />
+      <Skills />
+      <Experience />
+      <Projects />
+      <Education />
+      <Certifications />
+      <Contact />
+    </main>
   );
 }

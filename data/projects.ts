@@ -3,9 +3,9 @@ import type { Project } from '@/lib/types';
 export const projectsData: Project[] = [
   {
     title: 'Code-Based Zero Knowledge Proof Authentication in Banking System',
-    shortDescription: 'Secure authentication using zero-knowledge proofs for banking operations',
+    shortDescription: 'Cryptographically secure authentication using zero-knowledge proofs',
     description:
-      'Developed a cryptographically secure authentication system for banking operations using code-based zero-knowledge proof protocols. This system enables secure user verification without transmitting sensitive credentials, ensuring maximum security for financial transactions.',
+      'Developed a cryptographically secure authentication system using code-based zero-knowledge proof protocols. This academic project explores advanced cryptographic concepts and demonstrates passwordless authentication without transmitting sensitive credentials—a critical innovation for secure financial systems.',
     technologies: [
       'Java',
       'Zero-Knowledge Proofs',
@@ -16,24 +16,21 @@ export const projectsData: Project[] = [
     ],
     keyFeatures: [
       'Zero-knowledge proof protocol implementation for passwordless authentication',
-      'Code-based crypto authentication eliminating credential transmission',
+      'Code-based cryptographic authentication eliminating credential transmission',
       'Multi-factor authentication with cryptographic verification',
       'Audit logging for all authentication events',
-      'Integration with banking transaction systems',
       'Compliance with financial security standards',
-      'Real-time authentication verification',
-      'Fraud detection and prevention mechanisms',
     ],
     status: 'completed',
     impact:
-      'Enhanced banking system security eliminating credential-based vulnerabilities and reducing authentication fraud by 99%',
-    link: '#',
+      'Demonstrates advanced cryptographic security principles; eliminates credential-based vulnerabilities',
+    github: 'https://github.com/aryasree/zkp-banking-auth',
   },
   {
     title: 'Hospital Management System',
-    shortDescription: 'Comprehensive healthcare system for hospital operations management',
+    shortDescription: 'Full-stack healthcare system for hospital operations',
     description:
-      'Designed and implemented a comprehensive hospital management system using Java that handles patient records, doctor scheduling, appointment management, billing, and medical history tracking. The system streamlines hospital operations and improves patient care delivery.',
+      'Designed and implemented a comprehensive hospital management system demonstrating full-stack development skills. The system integrates patient records, doctor scheduling, appointment management, and billing—showcasing expertise in system design, database optimization, and building scalable applications.',
     technologies: [
       'Java',
       'Spring Boot',
@@ -44,23 +41,22 @@ export const projectsData: Project[] = [
     ],
     keyFeatures: [
       'Patient record management with complete medical history',
-      'Doctor and staff scheduling system',
-      'Appointment booking and tracking',
-      'Prescription and medication management',
-      'Billing and financial tracking',
-      'Test reports and lab integration',
+      'Doctor and staff scheduling system with conflict resolution',
+      'Appointment booking and real-time tracking',
+      'Prescription and medication management workflow',
+      'Financial tracking and billing automation',
       'Role-based access control (Admin, Doctor, Staff, Patient)',
-      'Real-time notifications for critical updates',
     ],
     status: 'completed',
     impact:
-      'Improved hospital operational efficiency by 45%, reduced patient record retrieval time from hours to seconds',
+      'Demonstrates full-stack development, system architecture, and database design for enterprise applications',
+    github: 'https://github.com/aryasree/hospital-management-system',
   },
   {
     title: 'Attribute-Based Encryption App on Code-Based PQC',
-    shortDescription: 'Secure messaging application using post-quantum cryptography',
+    shortDescription: 'Post-quantum cryptography for secure messaging',
     description:
-      'Created a secure messaging application leveraging attribute-based encryption techniques and code-based post-quantum cryptography. This application ensures message confidentiality and access control based on user attributes, resistant to quantum computing threats.',
+      'Created a secure messaging application leveraging attribute-based encryption and code-based post-quantum cryptography. This research-oriented project explores quantum-resistant security protocols and advanced access control mechanisms—preparing for the quantum computing era.',
     technologies: [
       'Python',
       'Post-Quantum Cryptography',
@@ -72,47 +68,44 @@ export const projectsData: Project[] = [
     keyFeatures: [
       'Attribute-based encryption for fine-grained access control',
       'Post-quantum cryptography (code-based) resistant to quantum attacks',
-      'End-to-end encrypted messaging',
-      'Attribute-based recipient filtering',
-      'Key management and policy enforcement',
-      'Message integrity verification',
+      'End-to-end encrypted messaging infrastructure',
+      'Key management and cryptographic policy enforcement',
       'Secure key exchange protocols',
-      'Compliance-ready encryption standards',
     ],
     status: 'completed',
     impact:
-      'Provides quantum-resistant security for sensitive communications, ensuring long-term data confidentiality',
+      'Demonstrates advanced cryptographic research; provides quantum-resistant security for sensitive communications',
+    github: 'https://github.com/aryasree/pqc-messaging-app',
   },
   {
     title: 'Console-Based Student & Library Management System',
-    shortDescription: 'Integrated management system for student records and library resources',
+    shortDescription: 'Core OOP and data structures for institutional management',
     description:
-      'Developed dual console-based applications for managing student records and library resources. Features comprehensive CRUD operations for student enrollment, course management, library cataloging, book issuance, and late fee calculations.',
+      'Developed dual console-based applications demonstrating object-oriented programming principles and data structure implementation. This project focuses on CRUD operations, file I/O, and comprehensive data management for student enrollment and library cataloging.',
     technologies: [
       'Java',
       'Object-Oriented Programming',
-      'File I/O',
       'Data Structures',
+      'File I/O',
     ],
     keyFeatures: [
-      'Student registration and enrollment management',
-      'Course assignment and tracking',
-      'Library book cataloging and classification',
+      'Student registration and course management with OOP principles',
+      'Library cataloging and classification system',
       'Book issuance and return tracking',
-      'Fine calculation and collection',
-      'Search and filter functionality',
-      'Data persistence with file storage',
-      'Comprehensive reporting features',
+      'Automated fine calculation and collection',
+      'Search and advanced filtering functionality',
+      'Data persistence with file-based storage',
     ],
     status: 'completed',
     impact:
-      'Automated student and library operations, reducing administrative workload by 60% and improving record accuracy',
+      'Demonstrates core programming concepts and data structure design for practical business applications',
+    github: 'https://github.com/aryasree/student-library-management',
   },
   {
     title: 'Attendance Management System',
-    shortDescription: 'Web-based attendance tracking for educational institutions',
+    shortDescription: 'Web application for institutional attendance tracking',
     description:
-      'Built a web-based attendance management system using PHP and MySQL for educational institutions. The system enables automated attendance tracking, reporting, and absentee notifications for students and parents.',
+      'Built a web-based attendance management system demonstrating full-stack web development skills. The system enables real-time attendance tracking, automated reporting, and parent notifications—illustrating practical web application architecture for educational institutions.',
     technologies: [
       'PHP',
       'MySQL',
@@ -122,24 +115,23 @@ export const projectsData: Project[] = [
       'jQuery',
     ],
     keyFeatures: [
-      'Real-time attendance marking and tracking',
-      'Student and class-wise attendance reports',
+      'Real-time attendance marking and tracking interface',
+      'Student and class-wise attendance reporting',
       'Automated notification system for absentees',
-      'Parent access to attendance records',
-      'Teacher and admin dashboards',
+      'Parent and teacher dashboard access',
       'Attendance statistics and analytics',
-      'Backup and data recovery features',
       'Multi-class and batch management',
     ],
     status: 'completed',
     impact:
-      'Reduced manual attendance tracking time by 80%, improved transparency and parent communication',
+      'Demonstrates web application fundamentals and user experience design for institutional workflows',
+    github: 'https://github.com/aryasree/attendance-management-system',
   },
   {
     title: 'Student Management System using Node.js and Cassandra',
-    shortDescription: 'Scalable student management platform with NoSQL database',
+    shortDescription: 'Scalable NoSQL architecture for distributed systems',
     description:
-      'Developed a modern student management system utilizing Node.js for backend development and Cassandra Query Language (CQL) for distributed database management. The system handles student data at scale with high availability and partition tolerance.',
+      'Developed a modern student management system utilizing Node.js and Cassandra to demonstrate proficiency in distributed database design and scalability. This project showcases understanding of NoSQL architecture, high-availability systems, and building applications for enterprise-scale data.',
     technologies: [
       'Node.js',
       'Express.js',
@@ -149,24 +141,23 @@ export const projectsData: Project[] = [
       'JWT',
     ],
     keyFeatures: [
-      'Scalable NoSQL database architecture',
+      'Scalable NoSQL database architecture with Cassandra',
       'Distributed data replication and fault tolerance',
-      'RESTful API for student operations',
+      'RESTful API design for student operations',
       'Authentication and authorization with JWT',
       'High-performance query execution with CQL',
-      'Student enrollment and course management',
-      'Transcript and grades tracking',
-      'Real-time data consistency',
+      'Transcript and grades tracking system',
     ],
     status: 'completed',
     impact:
-      'Handles 100,000+ student records with sub-second response times, ensuring institutional scalability',
+      'Demonstrates distributed systems design and NoSQL database optimization for enterprise scalability',
+    github: 'https://github.com/aryasree/student-management-cassandra',
   },
   {
     title: 'Anti-Phishing Website Detection System',
-    shortDescription: 'Python-based system for detecting and identifying phishing websites',
+    shortDescription: 'Machine learning-based cybersecurity threat detection',
     description:
-      'Implemented a sophisticated website detection system using Python to identify and mitigate phishing attacks. The system analyzes website characteristics, URL patterns, and content features to classify legitimate vs phishing sites with high accuracy.',
+      'Implemented a sophisticated website detection system using Python and machine learning to identify phishing attacks. This project demonstrates expertise in feature engineering, model training, and building practical security solutions using ML algorithms.',
     technologies: [
       'Python',
       'Machine Learning',
@@ -176,18 +167,17 @@ export const projectsData: Project[] = [
       'Flask',
     ],
     keyFeatures: [
-      'Phishing website detection using ML algorithms',
+      'Phishing website detection using ML classification algorithms',
       'URL pattern analysis and anomaly detection',
-      'Content-based phishing indicators',
-      'Real-time website classification',
-      'Browser extension for user protection',
-      'Threat database integration',
-      'Performance metrics and accuracy tracking',
-      'Continuous model improvement with new data',
+      'Content-based feature extraction and engineering',
+      'Real-time website classification API',
+      'Model performance metrics and accuracy tracking',
+      'Continuous model improvement pipeline',
     ],
     status: 'completed',
     impact:
-      'Detects phishing attempts with 95%+ accuracy, protecting users from credential theft and financial fraud',
+      'Demonstrates machine learning application in cybersecurity; detects phishing with 95%+ accuracy',
+    github: 'https://github.com/aryasree/anti-phishing-detection',
   },
 ];
 

@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion';
 import { Sun, Moon } from 'lucide-react';
 
 const sections = [
@@ -41,33 +42,41 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
-      <div className="flex items-center gap-4 px-3 py-1 rounded-full bg-[var(--card)]/10 backdrop-blur border border-[var(--border)] text-sm text-[var(--muted-foreground)]">
-        <ul className="flex gap-2 items-center">
-          {sections.map((s) => (
-            <li key={s.id}>
-              <button
-                onClick={() => scrollTo(s.id)}
-                className="px-3 py-1 rounded-md hover:bg-white/8 transition-colors"
-              >
-                {s.label}
-              </button>
-            </li>
-          ))}
-        </ul>
-
-        <div className="w-px h-6 bg-white/8 mx-2" />
-
-        <button
-          onClick={() => {
-            // trigger the state toggle; effect will add the CSS transition class
-            setTheme((t) => (t === 'dark' ? 'light' : 'dark'));
-          }}
-          aria-label="Toggle theme"
-          className="p-1 rounded-md hover:bg-white/8 transition-colors flex items-center justify-center"
+    <nav className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 w-full px-6">
+      <div className="flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="flex items-center gap-2 px-6 py-3 rounded-full bg-[var(--card)]/80 backdrop-blur-xl border border-[var(--border)] text-sm text-[var(--muted-foreground)] shadow-lg"
         >
-          {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-        </button>
+          <ul className="flex gap-1 items-center">
+            {sections.map((s) => (
+              <motion.li key={s.id} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <button
+                  onClick={() => scrollTo(s.id)}
+                  className="px-4 py-2 rounded-lg hover:bg-[var(--muted)]/60 hover:text-[var(--foreground)] transition-colors font-medium text-xs md:text-sm"
+                >
+                  {s.label}
+                </button>
+              </motion.li>
+            ))}
+          </ul>
+
+          <div className="w-px h-7 bg-[var(--border)] mx-3" />
+
+          <motion.button
+            onClick={() => {
+              setTheme((t) => (t === 'dark' ? 'light' : 'dark'));
+            }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            aria-label="Toggle theme"
+            className="p-2 rounded-lg hover:bg-[var(--muted)]/60 transition-colors flex items-center justify-center"
+          >
+            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+          </motion.button>
+        </motion.div>
       </div>
     </nav>
   );

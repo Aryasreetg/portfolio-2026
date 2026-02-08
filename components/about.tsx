@@ -6,7 +6,6 @@ import {
   Brain,
   Users,
   Zap,
-  CheckCircle,
 } from 'lucide-react';
 import { personalInfo } from '@/data/personal';
 import { containerVariants, itemVariants } from '@/lib/animations';
@@ -45,12 +44,12 @@ export default function About() {
         {/* Main Bio */}
         <motion.div
           variants={itemVariants}
-          className="interactive-card bg-card text-card-foreground border border-border rounded-xl p-8 md:p-12"
+          className="interactive-card bg-card text-card-foreground border border-border rounded-2xl p-10 md:p-14"
         >
-          <p className="text-[var(--muted-foreground)] text-lg leading-relaxed mb-6">
+          <p className="text-[var(--muted-foreground)] text-xl leading-relaxed mb-7">
             {personalInfo.bio}
           </p>
-          <p className="text-[var(--muted-foreground)] leading-relaxed">
+          <p className="text-[var(--muted-foreground)] text-lg leading-relaxed">
             I bring {personalInfo.yearsOfExperience}+ years of professional experience to the table,
             with a proven track record of delivering production-grade applications, managing
             complex projects, and fostering collaborative team environments. My journey has been
@@ -62,7 +61,7 @@ export default function About() {
         {/* Highlights Grid */}
         <motion.div
           variants={containerVariants}
-          className="grid md:grid-cols-2 gap-6"
+          className="grid md:grid-cols-2 gap-7 lg:gap-8"
         >
           {highlights.map((highlight, index) => {
             const Icon = highlight.icon;
@@ -70,17 +69,17 @@ export default function About() {
               <motion.div
                 key={index}
                 variants={itemVariants}
-                className="group interactive-card bg-card text-card-foreground border border-border rounded-lg p-6 transition-all"
+                className="group interactive-card bg-card text-card-foreground border border-border rounded-2xl p-8 transition-all"
               >
-                <div className="flex items-start gap-4">
-                  <div className="p-2 rounded-lg bg-[var(--primary)]/20 text-[var(--primary)] group-hover:scale-110 transition-transform">
-                    <Icon size={24} />
+                <div className="flex items-start gap-5">
+                  <div className="p-4 rounded-xl bg-[var(--primary)]/15 text-[var(--primary)] group-hover:scale-125 transition-transform flex-shrink-0">
+                    <Icon size={28} />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-foreground mb-2">
+                    <h3 className="text-xl font-bold text-foreground mb-3">
                       {highlight.title}
                     </h3>
-                    <p className="text-[var(--muted-foreground)] text-sm leading-relaxed">
+                    <p className="text-[var(--muted-foreground)] text-base leading-relaxed">
                       {highlight.description}
                     </p>
                   </div>
@@ -93,7 +92,7 @@ export default function About() {
         {/* Key Stats */}
         <motion.div
           variants={itemVariants}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4"
+          className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-7"
         >
           {[
             { label: 'Years Experience', value: '2+' },
@@ -103,12 +102,12 @@ export default function About() {
           ].map((stat, index) => (
             <div
               key={index}
-              className="interactive-card bg-card text-card-foreground border border-border rounded-lg p-4 text-center transition-colors"
+              className="interactive-card bg-card text-card-foreground border border-border rounded-2xl p-7 text-center transition-colors"
             >
-              <div className="text-2xl font-bold text-foreground mb-1">
+              <div className="text-3xl font-bold text-foreground mb-2">
                 {stat.value}
               </div>
-              <div className="text-xs text-[var(--muted-foreground)]">{stat.label}</div>
+              <div className="text-xs font-semibold text-[var(--muted-foreground)] uppercase tracking-wide">{stat.label}</div>
             </div>
           ))}
         </motion.div>

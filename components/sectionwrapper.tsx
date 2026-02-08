@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { ReactNode } from 'react';
+import { ReactNode, Children } from 'react';
 import { motion } from 'framer-motion';
-import { containerVariants } from '@/lib/animations';
+import { containerVariants, itemVariants, titleVariants } from '@/lib/animations';
 
 interface SectionWrapperProps {
   id: string;
@@ -31,32 +31,50 @@ export default function SectionWrapper({
   return (
     <section
       id={id}
-      className={`py-20 px-6 min-h-screen flex items-center ${bgClass} ${className}`}
+      className={`relative py-32 px-6 min-h-fit flex items-center overflow-hidden ${bgClass} ${className}`}
     >
+      {/* Decorative animated accent blob (purely visual) */}
+      <motion.div
+        aria-hidden
+        className="accent-blob pointer-events-none"
+        animate={{ y: [0, -12, 0] }}
+        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+      />
+
       <div className="w-full">
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true, margin: '-100px' }}
-          className="text-center mb-16"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-120px' }}
+          variants={titleVariants}
+          className="text-center mb-20"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-[var(--primary)] via-[var(--accent)] to-[var(--primary)] bg-clip-text text-transparent">
+          <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-[var(--primary)] via-[var(--accent)] to-[var(--primary)] bg-clip-text text-transparent">
             {title}
           </h2>
           {subtitle && (
-            <p className="text-lg text-[var(--muted-foreground)] max-w-2xl mx-auto">{subtitle}</p>
+            <p className="text-xl text-[var(--muted-foreground)] max-w-3xl mx-auto leading-relaxed">{subtitle}</p>
           )}
         </motion.div>
 
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: '-100px' }}
+          viewport={{ once: true, margin: '-120px' }}
           variants={containerVariants}
-          className="max-w-5xl mx-auto"
+          className="max-w-6xl mx-auto"
         >
-          {children}
+          {Children.map(children, (child, idx) => (
+            <motion.div
+              key={idx}
+              variants={itemVariants}
+              whileHover={{ scale: 1.005 }}
+              whileTap={{ scale: 0.998 }}
+              className="mb-8"
+            >
+              {child}
+            </motion.div>
+          ))}
         </motion.div>
       </div>
     </section>

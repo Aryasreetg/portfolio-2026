@@ -3,14 +3,13 @@
 import { motion } from 'framer-motion';
 import {
   Github,
-  ExternalLink,
   CheckCircle,
   AlertCircle,
   Clock,
   Zap,
 } from 'lucide-react';
 import { projectsData } from '@/data/projects';
-import { containerVariants, itemVariants, cardHoverVariants } from '@/lib/animations';
+import { containerVariants, itemVariants } from '@/lib/animations';
 import SectionWrapper from './sectionwrapper';
 
 export default function Projects() {
@@ -41,12 +40,12 @@ export default function Projects() {
   return (
     <SectionWrapper
       id="projects"
-      title="Featured Projects"
-      subtitle="Showcase of impactful projects I've built and led"
+      title="Academic Projects"
+      subtitle="Research and development projects showcasing technical depth and learning outcomes"
     >
       <motion.div
         variants={containerVariants}
-        className="grid md:grid-cols-2 gap-6"
+        className="grid md:grid-cols-2 gap-8 lg:gap-10"
       >
         {projectsData.map((project, index) => {
           const statusInfo = statusConfig[project.status];
@@ -59,51 +58,51 @@ export default function Projects() {
               whileHover="hover"
               className="group"
             >
-              <div className="interactive-card bg-card text-card-foreground border border-border rounded-lg overflow-hidden transition-all h-full flex flex-col">
+              <div className="interactive-card bg-card text-card-foreground border border-border rounded-2xl overflow-hidden transition-all h-full flex flex-col">
                 {/* Header */}
-                <div className="p-6 pb-4 border-b border-border">
-                  <div className="flex items-start justify-between gap-4 mb-3">
-                    <h3 className="text-xl font-bold text-foreground flex-1 group-hover:text-[var(--primary)] transition-colors">
+                <div className="px-8 py-7 border-b border-border">
+                  <div className="flex items-start justify-between gap-4 mb-4">
+                    <h3 className="text-2xl font-bold text-foreground flex-1 group-hover:text-[var(--primary)] transition-colors leading-tight">
                       {project.title}
                     </h3>
                     <div
-                      className={`px-3 py-1 rounded-full flex items-center gap-2 ${statusInfo.bg} border ${statusInfo.border}`}
+                      className={`px-4 py-2 rounded-lg flex items-center gap-2 flex-shrink-0 ${statusInfo.bg} border ${statusInfo.border}`}
                     >
-                      <StatusIcon size={14} className={statusInfo.color} />
+                      <StatusIcon size={16} className={statusInfo.color} />
                       <span className="text-xs font-semibold text-[var(--muted-foreground)]">
                         {statusInfo.label}
                       </span>
                     </div>
                   </div>
-                  <p className="text-sm text-[var(--muted-foreground)]">
+                  <p className="text-base text-[var(--muted-foreground)] font-medium">
                     {project.shortDescription}
                   </p>
                 </div>
 
                 {/* Content */}
-                  <div className="p-6 space-y-4 flex-1">
-                  <p className="text-[var(--muted-foreground)] text-sm leading-relaxed">
+                <div className="px-8 py-8 space-y-6 flex-1">
+                  <p className="text-[var(--muted-foreground)] text-base leading-relaxed">
                     {project.description}
                   </p>
 
                   {/* Key Features */}
                   <div>
-                    <p className="text-xs font-semibold text-[var(--muted-foreground)] mb-2 flex items-center gap-2">
-                      <Zap size={14} />
+                    <p className="text-xs font-bold text-[var(--foreground)] mb-3 flex items-center gap-2 uppercase tracking-wide">
+                      <Zap size={16} className="text-[var(--primary)]" />
                       Key Features
                     </p>
-                    <ul className="space-y-1">
+                    <ul className="space-y-2.5">
                       {project.keyFeatures.slice(0, 3).map((feature, idx) => (
                         <li
                           key={idx}
-                          className="text-xs text-[var(--muted-foreground)] flex items-start gap-2"
+                          className="text-sm text-[var(--muted-foreground)] flex items-start gap-3"
                         >
-                          <span className="text-[var(--primary)] mt-1">•</span>
+                          <span className="text-[var(--primary)] font-bold mt-0.5 flex-shrink-0">→</span>
                           <span>{feature}</span>
                         </li>
                       ))}
                       {project.keyFeatures.length > 3 && (
-                        <li className="text-xs text-[var(--muted-foreground)] italic">
+                        <li className="text-sm text-[var(--muted-foreground)] italic pt-1">
                           +{project.keyFeatures.length - 3} more features
                         </li>
                       )}
@@ -111,25 +110,26 @@ export default function Projects() {
                   </div>
 
                   {/* Impact */}
-                  <div className="bg-muted/50 rounded p-3 border border-border">
-                    <p className="text-xs text-[var(--muted-foreground)] mb-1">Impact</p>
-                    <p className="text-sm text-foreground">{project.impact}</p>
+                  <div className="bg-[var(--primary)]/8 rounded-xl p-4 border border-[var(--primary)]/20">
+                    <p className="text-xs font-bold text-[var(--foreground)] mb-2 uppercase tracking-wide">Technical Impact</p>
+                    <p className="text-base text-[var(--card-foreground)] font-medium">{project.impact}</p>
                   </div>
                 </div>
 
                 {/* Technologies */}
-                <div className="px-6 py-4 border-t border-[var(--border)]">
-                  <div className="flex flex-wrap gap-2">
+                <div className="px-8 py-6 border-t border-[var(--border)]">
+                  <div className="flex flex-wrap gap-2.5">
                     {project.technologies.slice(0, 4).map((tech, idx) => (
-                      <span
+                      <motion.span
                         key={idx}
-                        className="px-2 py-1 bg-[var(--primary)]/20 text-[var(--primary)] rounded text-xs border border-[var(--primary)]/30 hover:border-[var(--primary)]/50 transition-colors"
+                        whileHover={{ scale: 1.08, y: -2 }}
+                        className="px-3 py-2 bg-[var(--primary)]/15 text-[var(--primary)] rounded-lg text-xs font-semibold border border-[var(--primary)]/40 hover:border-[var(--primary)]/60 transition-colors cursor-default"
                       >
                         {tech}
-                      </span>
+                      </motion.span>
                     ))}
                     {project.technologies.length > 4 && (
-                      <span className="px-2 py-1 bg-[var(--card)]/30 text-[var(--muted-foreground)] rounded text-xs border border-[var(--border)]/30">
+                      <span className="px-3 py-2 bg-[var(--muted)]/40 text-[var(--muted-foreground)] rounded-lg text-xs font-semibold border border-[var(--border)]">
                         +{project.technologies.length - 4}
                       </span>
                     )}
@@ -137,34 +137,19 @@ export default function Projects() {
                 </div>
 
                 {/* Links */}
-                {(project.github || project.link) && (
-                  <div className="px-6 py-4 border-t border-border flex gap-3">
-                    {project.github && (
-                      <motion.a
-                        href={project.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="flex items-center gap-2 px-3 py-2 rounded bg-gray-800/50 hover:bg-gray-700 text-gray-300 hover:text-white transition-colors text-sm"
-                      >
-                        <Github size={16} />
-                        Code
-                      </motion.a>
-                    )}
-                    {project.link && (
-                      <motion.a
-                        href={project.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="flex items-center gap-2 px-3 py-2 rounded bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 hover:text-purple-200 transition-colors text-sm border border-purple-500/30 hover:border-purple-500/50"
-                      >
-                        <ExternalLink size={16} />
-                        Live
-                      </motion.a>
-                    )}
+                {project.github && (
+                  <div className="px-8 py-6 border-t border-border flex gap-3">
+                    <motion.a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="btn btn-primary flex-1"
+                    >
+                      <Github size={18} />
+                      View Code
+                    </motion.a>
                   </div>
                 )}
               </div>

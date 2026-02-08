@@ -4,7 +4,7 @@ export const experienceData: ExperienceEntry[] = [
   {
     title: 'Java Developer & Project Lead',
     company: 'Deeshaa Limited (Baseel Partners LLP)',
-    location: 'Bangalore, India',
+    location: 'Pune, India- Remote',
     startDate: 'June 2023',
     endDate: 'February 2026',
     description:

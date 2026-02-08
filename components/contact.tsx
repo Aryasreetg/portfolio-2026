@@ -5,10 +5,10 @@ import {
   Mail,
   Phone,
   MapPin,
-  Send,
   Linkedin,
   Github,
   Twitter,
+  type LucideIcon,
 } from 'lucide-react';
 import { personalInfo } from '@/data/personal';
 import {
@@ -45,7 +45,7 @@ export default function Contact() {
     },
   ];
 
-  const socialIcons: { [key: string]: React.ComponentType<any> } = {
+  const socialIcons: { [key: string]: LucideIcon } = {
     Github,
     Linkedin,
     Mail,
@@ -60,7 +60,7 @@ export default function Contact() {
     >
       <motion.div
         variants={containerVariants}
-        className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto mb-12"
+        className="grid md:grid-cols-3 gap-8 lg:gap-10 max-w-4xl mx-auto mb-16"
       >
         {/* Contact Methods */}
         {contactMethods.map((method, index) => {
@@ -70,17 +70,17 @@ export default function Contact() {
               key={index}
               href={method.link}
               variants={itemVariants}
-              whileHover={{ y: -4 }}
+              whileHover={{ y: -6 }}
               className="group"
             >
-              <div className="interactive-card bg-card text-card-foreground border border-border rounded-lg p-6 transition-all h-full">
-                <div className={`inline-block p-3 rounded-lg ${method.color} mb-4 group-hover:scale-110 transition-transform`}>
-                  <Icon size={24} />
+              <div className="interactive-card bg-card text-card-foreground border border-border rounded-2xl p-8 transition-all h-full flex flex-col items-center text-center">
+                <div className={`inline-block p-4 rounded-xl ${method.color} mb-6 group-hover:scale-125 transition-transform`}>
+                  <Icon size={28} />
                 </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">
+                <h3 className="text-xl font-bold text-foreground mb-3">
                   {method.label}
                 </h3>
-                <p className="text-[var(--muted-foreground)] text-sm break-all">
+                <p className="text-[var(--muted-foreground)] text-base break-all font-medium">
                   {method.value}
                 </p>
               </div>
@@ -89,51 +89,50 @@ export default function Contact() {
         })}
       </motion.div>
 
-      {/* Social Links */}
+      {/* Social Links & CTA */}
       <motion.div
         variants={itemVariants}
-          className="interactive-card bg-card text-card-foreground border border-border rounded-lg p-8 text-center max-w-2xl mx-auto"
-        >
-          <h3 className="text-xl font-bold text-foreground mb-6">
-            Connect with me on social media
-          </h3>
-          <motion.div
-            variants={containerVariants}
-            className="flex justify-center gap-4 flex-wrap"
-          >
-            {personalInfo.contact.socialLinks.map((link) => {
-              const Icon = socialIcons[link.icon];
-              return Icon ? (
-                <motion.a
-                  key={link.name}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variants={itemVariants}
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-12 h-12 rounded-full bg-[var(--card)]/50 border border-[var(--border)] flex items-center justify-center text-[var(--muted-foreground)] hover:bg-[var(--primary)]/20 hover:border-[var(--primary)] hover:text-[var(--primary)] transition-all group"
-                >
-                  <Icon size={20} className="group-hover:animate-pulse" />
-                </motion.a>
-              ) : null;
-            })}
-        </motion.div>
-      </motion.div>
-
-      {/* CTA */}
-      <motion.div
-        variants={itemVariants}
-        className="text-center mt-12"
+        className="interactive-card bg-gradient-to-br from-[var(--card)] to-[var(--card)] text-card-foreground border border-border rounded-2xl p-12 text-center max-w-2xl mx-auto"
       >
+        <h3 className="text-3xl font-bold text-foreground mb-3">
+          Let&apos;s connect
+        </h3>
+        <p className="text-[var(--muted-foreground)] text-lg mb-10">
+          I&apos;m always happy to discuss new opportunities, ideas, or collaborations.
+        </p>
+
+        <motion.div
+          variants={containerVariants}
+          className="flex justify-center gap-6 flex-wrap mb-10"
+        >
+          {personalInfo.contact.socialLinks.map((link) => {
+            const Icon = socialIcons[link.icon];
+            return Icon ? (
+              <motion.a
+                key={link.name}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                variants={itemVariants}
+                whileHover={{ scale: 1.15, y: -4 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-14 h-14 rounded-full bg-[var(--muted)]/50 border border-[var(--border)] flex items-center justify-center text-[var(--muted-foreground)] hover:bg-[var(--primary)]/20 hover:border-[var(--primary)] hover:text-[var(--primary)] transition-all"
+                title={link.name}
+              >
+                <Icon size={22} />
+              </motion.a>
+            ) : null;
+          })}
+        </motion.div>
+
         <motion.a
           href={`mailto:${personalInfo.contact.email}`}
           variants={buttonHoverVariants}
           whileHover="hover"
           whileTap="tap"
-          className="inline-flex items-center gap-2 px-8 py-3 rounded-lg bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] text-[var(--primary-foreground)] font-semibold hover:shadow-lg hover:shadow-[var(--primary)]/50 transition-shadow"
+          className="btn btn-primary"
         >
-          <Send size={20} />
+          <Mail size={20} />
           Send me an Email
         </motion.a>
       </motion.div>

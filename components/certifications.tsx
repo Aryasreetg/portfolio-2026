@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { Award, Star, Trophy } from 'lucide-react';
 import { certificationsData } from '@/data/certifications';
-import { containerVariants, itemVariants, badgeVariants } from '@/lib/animations';
+import { containerVariants, badgeVariants } from '@/lib/animations';
 import SectionWrapper from './sectionwrapper';
 
 const iconMap: { [key: string]: React.ReactNode } = {
@@ -63,7 +63,7 @@ export default function Certifications() {
 
             <motion.div
               variants={containerVariants}
-              className="grid md:grid-cols-2 gap-4"
+              className="grid md:grid-cols-2 gap-7"
             >
               {certs.map((cert, index) => {
                 const icon = getIcon(cert.icon);
@@ -73,24 +73,24 @@ export default function Certifications() {
                   <motion.div
                     key={index}
                     variants={badgeVariants}
-                    className={`interactive-card bg-card text-card-foreground border border-border rounded-lg p-4 transition-all`}
+                    className={`interactive-card bg-card text-card-foreground border border-border rounded-2xl p-7 transition-all`}
                   >
-                    <div className="flex items-start gap-3">
-                      <div className="p-2 rounded bg-[var(--primary)]/10 text-[var(--primary)] flex-shrink-0">
+                    <div className="flex items-start gap-4">
+                      <div className="p-3 rounded-lg bg-[var(--primary)]/15 text-[var(--primary)] flex-shrink-0 group-hover:scale-110 transition-transform">
                         {icon}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-base font-semibold text-foreground mb-1 leading-tight">
+                        <h4 className="text-lg font-bold text-foreground mb-2 leading-tight">
                           {cert.title}
                         </h4>
-                        <p className="text-sm text-[var(--muted-foreground)] mb-2">{cert.issuer}</p>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs text-[var(--muted-foreground)]">
+                        <p className="text-base text-[var(--muted-foreground)] mb-3 font-medium">{cert.issuer}</p>
+                        <div className="flex items-center justify-between gap-3">
+                          <span className="text-sm text-[var(--muted-foreground)]">
                             {cert.issueDate}
                             {cert.expiryDate && ` - ${cert.expiryDate}`}
                           </span>
                           <span
-                            className={`px-2 py-0.5 rounded-full text-xs font-semibold ${config.badge}`}
+                            className={`px-3 py-1 rounded-lg text-xs font-bold ${config.badge}`}
                           >
                             {config.label}
                           </span>

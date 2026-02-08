@@ -96,7 +96,7 @@ export default function About() {
         >
           {[
             { label: 'Years Experience', value: '2+' },
-            { label: 'Projects Managed', value: '3' },
+            { label: 'Projects Managed', value: '10+' },
             { label: 'Technologies', value: '15+' },
             { label: 'Team Members Led', value: 'Multiple' },
           ].map((stat, index) => (

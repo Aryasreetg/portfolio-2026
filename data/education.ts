@@ -65,9 +65,9 @@ export const educationData: EducationEntry[] = [
     degree: 'SSLC (Secondary School Leaving Certificate)',
     institution: 'Kerala State Board',
     fieldOfStudy: 'General Education',
-    startDate: '2014',
+    startDate: '2015',
     endDate: '2016',
-    score: '97',
+    score: '95',
     scoreLabel: 'Percentage',
     coursework: [
       'Mathematics',

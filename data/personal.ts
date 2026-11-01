@@ -2,13 +2,13 @@ import type { PersonalInfo } from '@/lib/types';
 
 export const personalInfo: PersonalInfo = {
   fullName: 'Aryasree T G',
-  title: 'Java Developer & Project Lead',
-  subtitle: 'Senior Software Engineer | Microservices Architect',
-  bio: 'Project Lead managing three projects with 2+ years of experience as a Java-Spring Boot Developer. MCA graduate from Pondicherry University, proficient in Spring Boot for backend development and Angular/Next.js for frontend development. Passionate about delivering high-quality software solutions, architecting scalable systems, and collaborating with cross-functional teams to achieve ambitious project goals.',
-  yearsOfExperience: 2,
-  currentRole: 'Java Developer & Project Lead',
+  title: 'Team Lead',
+  subtitle: 'Java · Spring Boot · Microservices',
+  bio: 'I lead a team of 25+ engineers building production-grade microservice platforms with Spring Boot, Kafka, and Angular/Next.js. I care about clean architecture, calm delivery, and helping the people around me grow.',
+  careerStart: '2023-06-19',
+  teamSize: '25+',
+  currentRole: 'Team Lead',
   educationBackground: 'MCA from Pondicherry University',
-  // Path to profile image placed in the public folder. Please add the image file at `public/profile.jpg`.
   profileImage: '/image.jpeg',
   contact: {
     email: 'aryasreetg26@gmail.com',
@@ -22,13 +22,7 @@ export const personalInfo: PersonalInfo = {
       {
         name: 'LinkedIn',
         url: 'https://www.linkedin.com/in/aryasree-tg-027461201',
-
         icon: 'Linkedin',
-      },
-      {
-        name: 'Email',
-        url: 'mailto:aryasreetg26@gmail.com',
-        icon: 'Mail',
       },
       {
         name: 'Instagram',

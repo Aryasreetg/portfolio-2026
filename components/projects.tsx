@@ -1,162 +1,114 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import {
-  Github,
-  CheckCircle,
-  AlertCircle,
-  Clock,
-  Zap,
-} from 'lucide-react';
+import { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowUpRight, Github, Plus } from 'lucide-react';
 import { projectsData } from '@/data/projects';
-import { containerVariants, itemVariants } from '@/lib/animations';
-import SectionWrapper from './sectionwrapper';
+import { Em, Reveal, SectionHeading } from './ui';
 
 export default function Projects() {
-  const statusConfig = {
-    completed: {
-      icon: CheckCircle,
-      color: 'text-emerald-400',
-      bg: 'bg-emerald-500/10',
-      border: 'border-emerald-500/30',
-      label: 'Completed',
-    },
-    'in-progress': {
-      icon: Clock,
-      color: 'text-blue-400',
-      bg: 'bg-blue-500/10',
-      border: 'border-blue-500/30',
-      label: 'In Progress',
-    },
-    planning: {
-      icon: AlertCircle,
-      color: 'text-yellow-400',
-      bg: 'bg-yellow-500/10',
-      border: 'border-yellow-500/30',
-      label: 'Planning',
-    },
-  };
+  const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <SectionWrapper
-      id="projects"
-      title="Academic Projects"
-      subtitle="Research and development projects showcasing technical depth and learning outcomes"
-    >
-      <motion.div
-        variants={containerVariants}
-        className="grid md:grid-cols-2 gap-8 lg:gap-10"
-      >
-        {projectsData.map((project, index) => {
-          const statusInfo = statusConfig[project.status];
-          const StatusIcon = statusInfo.icon;
+    <section id="projects" className="py-20 md:py-28">
+      <div className="container-x">
+        <SectionHeading
+          index="04"
+          label="Selected work"
+          aside="Academic and personal builds — from post-quantum cryptography to ML-based phishing detection. Tap a row to open it."
+          title={
+            <>
+              Projects that taught me to <Em>think in systems.</Em>
+            </>
+          }
+        />
 
-          return (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              whileHover="hover"
-              className="group"
-            >
-              <div className="interactive-card bg-card text-card-foreground border border-border rounded-2xl overflow-hidden transition-all h-full flex flex-col">
-                {/* Header */}
-                <div className="px-8 py-7 border-b border-border">
-                  <div className="flex items-start justify-between gap-4 mb-4">
-                    <h3 className="text-2xl font-bold text-foreground flex-1 group-hover:text-[var(--primary)] transition-colors leading-tight">
-                      {project.title}
-                    </h3>
-                    <div
-                      className={`px-4 py-2 rounded-lg flex items-center gap-2 flex-shrink-0 ${statusInfo.bg} border ${statusInfo.border}`}
-                    >
-                      <StatusIcon size={16} className={statusInfo.color} />
-                      <span className="text-xs font-semibold text-[var(--muted-foreground)]">
-                        {statusInfo.label}
+        <div className="border-b border-line">
+          {projectsData.map((p, i) => {
+            const isOpen = open === i;
+            return (
+              <Reveal key={p.title} delay={0.04 * i}>
+                <div className="border-t border-line">
+                  <button
+                    onClick={() => setOpen(isOpen ? null : i)}
+                    aria-expanded={isOpen}
+                    className="group grid w-full grid-cols-[auto_1fr_auto] items-center gap-5 py-7 text-left md:gap-10 md:py-9"
+                  >
+                    <span className="font-mono text-xs text-faint transition-colors group-hover:text-accent">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span>
+                      <span className="block text-xl font-medium tracking-tight transition-transform duration-500 group-hover:translate-x-2 md:text-3xl">
+                        {p.title}
                       </span>
-                    </div>
-                  </div>
-                  <p className="text-base text-[var(--muted-foreground)] font-medium">
-                    {project.shortDescription}
-                  </p>
-                </div>
+                      <span className="mt-1.5 block text-sm text-dim">{p.shortDescription}</span>
+                    </span>
+                    <motion.span
+                      animate={{ rotate: isOpen ? 45 : 0 }}
+                      className={`grid h-10 w-10 place-items-center rounded-full border transition-colors ${
+                        isOpen ? 'border-accent-fill bg-accent-fill text-accent-ink' : 'border-line'
+                      }`}
+                    >
+                      <Plus size={16} />
+                    </motion.span>
+                  </button>
 
-                {/* Content */}
-                <div className="px-8 py-8 space-y-6 flex-1">
-                  <p className="text-[var(--muted-foreground)] text-base leading-relaxed">
-                    {project.description}
-                  </p>
-
-                  {/* Key Features */}
-                  <div>
-                    <p className="text-xs font-bold text-[var(--foreground)] mb-3 flex items-center gap-2 uppercase tracking-wide">
-                      <Zap size={16} className="text-[var(--primary)]" />
-                      Key Features
-                    </p>
-                    <ul className="space-y-2.5">
-                      {project.keyFeatures.slice(0, 3).map((feature, idx) => (
-                        <li
-                          key={idx}
-                          className="text-sm text-[var(--muted-foreground)] flex items-start gap-3"
-                        >
-                          <span className="text-[var(--primary)] font-bold mt-0.5 flex-shrink-0">→</span>
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                      {project.keyFeatures.length > 3 && (
-                        <li className="text-sm text-[var(--muted-foreground)] italic pt-1">
-                          +{project.keyFeatures.length - 3} more features
-                        </li>
-                      )}
-                    </ul>
-                  </div>
-
-                  {/* Impact */}
-                  <div className="bg-[var(--primary)]/8 rounded-xl p-4 border border-[var(--primary)]/20">
-                    <p className="text-xs font-bold text-[var(--foreground)] mb-2 uppercase tracking-wide">Technical Impact</p>
-                    <p className="text-base text-[var(--card-foreground)] font-medium">{project.impact}</p>
-                  </div>
-                </div>
-
-                {/* Technologies */}
-                <div className="px-8 py-6 border-t border-[var(--border)]">
-                  <div className="flex flex-wrap gap-2.5">
-                    {project.technologies.slice(0, 4).map((tech, idx) => (
-                      <motion.span
-                        key={idx}
-                        whileHover={{ scale: 1.08, y: -2 }}
-                        className="px-3 py-2 bg-[var(--primary)]/15 text-[var(--primary)] rounded-lg text-xs font-semibold border border-[var(--primary)]/40 hover:border-[var(--primary)]/60 transition-colors cursor-default"
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                        className="overflow-hidden"
                       >
-                        {tech}
-                      </motion.span>
-                    ))}
-                    {project.technologies.length > 4 && (
-                      <span className="px-3 py-2 bg-[var(--muted)]/40 text-[var(--muted-foreground)] rounded-lg text-xs font-semibold border border-[var(--border)]">
-                        +{project.technologies.length - 4}
-                      </span>
+                        <div className="grid gap-10 pb-10 md:grid-cols-[1fr_1fr] md:pl-[calc(2.5rem+1.25rem)]">
+                          <div>
+                            <p className="leading-relaxed text-dim">{p.description}</p>
+                            <p className="mt-6 border-l-2 border-accent pl-4 text-sm text-ink">
+                              {p.impact}
+                            </p>
+                            <div className="mt-6 flex flex-wrap gap-2">
+                              {p.technologies.map((t) => (
+                                <span key={t} className="chip">
+                                  {t}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                          <div>
+                            <p className="eyebrow mb-4">Key features</p>
+                            <ul className="space-y-2.5">
+                              {p.keyFeatures.map((f) => (
+                                <li key={f} className="flex gap-3 text-sm text-dim">
+                                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent" />
+                                  {f}
+                                </li>
+                              ))}
+                            </ul>
+                            <div className="mt-8 flex flex-wrap gap-3">
+                              {p.github && (
+                                <a href={p.github} target="_blank" rel="noopener noreferrer" className="btn-ghost !py-2">
+                                  <Github size={14} /> Source
+                                </a>
+                              )}
+                              {p.link && (
+                                <a href={p.link} target="_blank" rel="noopener noreferrer" className="btn-solid !py-2">
+                                  Live <ArrowUpRight size={14} />
+                                </a>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
                     )}
-                  </div>
+                  </AnimatePresence>
                 </div>
-
-                {/* Links */}
-                {project.github && (
-                  <div className="px-8 py-6 border-t border-border flex gap-3">
-                    <motion.a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="btn btn-primary flex-1"
-                    >
-                      <Github size={18} />
-                      View Code
-                    </motion.a>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          );
-        })}
-      </motion.div>
-    </SectionWrapper>
+              </Reveal>
+            );
+          })}
+        </div>
+      </div>
+    </section>
   );
 }

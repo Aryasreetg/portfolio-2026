@@ -2,14 +2,20 @@ import type { ExperienceEntry } from '@/lib/types';
 
 export const experienceData: ExperienceEntry[] = [
   {
-    title: 'Java Developer & Project Lead',
+    title: 'Team Lead · Java Developer & Project Lead',
     company: 'Deeshaa Limited (Baseel Partners LLP)',
-    location: 'Pune, India- Remote',
+    location: 'Pune, India · Remote',
     startDate: 'June 2023',
-    endDate: 'February 2026',
+    startISO: '2023-06-19',
+    endDate: 'Present',
     description:
-      'Senior technical lead managing three concurrent projects from conception through production deployment, overseeing full-stack architecture, microservices design, and cross-functional team collaboration. Delivered mission-critical applications with Version 1 of two projects deployed to production.',
+      'Leading a team of 25+ engineers while owning three concurrent projects from conception to production — full-stack architecture, microservices design, and cross-functional delivery. Shipped Version 1 of two projects, with one live in production.',
     responsibilities: [
+      {
+        title: 'Team Leadership',
+        description:
+          'Lead and mentor a team of 25+ engineers — setting technical direction, unblocking delivery, and building a culture of ownership and quality across concurrent projects.',
+      },
       {
         title: 'Project Leadership & Management',
         description:

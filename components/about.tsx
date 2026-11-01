@@ -1,117 +1,88 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import {
-  Code2,
-  Brain,
-  Users,
-  Zap,
-} from 'lucide-react';
+import { Compass, MessagesSquare, ShieldCheck, Sprout } from 'lucide-react';
 import { personalInfo } from '@/data/personal';
-import { containerVariants, itemVariants } from '@/lib/animations';
-import SectionWrapper from './sectionwrapper';
+import { useTenure } from '@/lib/tenure';
+import { Em, Reveal, SectionHeading } from './ui';
 
-const highlights = [
-  {
-    icon: Code2,
-    title: 'Full-Stack Development',
-    description: 'Expertise in both backend (Spring Boot, Java) and frontend (Angular, Next.js) technologies',
-  },
-  {
-    icon: Brain,
-    title: 'System Architecture',
-    description: 'Specialized in designing scalable microservices architectures and distributed systems',
-  },
-  {
-    icon: Users,
-    title: 'Team Leadership',
-    description: 'Managing and leading cross-functional teams to deliver high-quality software solutions',
-  },
-  {
-    icon: Zap,
-    title: 'Performance Optimization',
-    description: 'Focused on optimizing applications for speed, scalability, and reliability',
-  },
+const principles = [
+  { icon: Compass, title: 'Clear direction', text: 'Everyone knows what we are building, why, and what "done" looks like.' },
+  { icon: ShieldCheck, title: 'Quality by default', text: 'Thoughtful reviews, tests and observability baked in, not bolted on.' },
+  { icon: MessagesSquare, title: 'Open communication', text: 'Problems surface early. Decisions are written down and shared.' },
+  { icon: Sprout, title: 'Grow the team', text: 'Mentoring and ownership so every engineer levels up over time.' },
 ];
 
 export default function About() {
+  const { label } = useTenure(personalInfo.careerStart);
+
+  const facts = [
+    ['Role', personalInfo.currentRole],
+    ['Team', `${personalInfo.teamSize} engineers`],
+    ['Experience', label],
+    ['Education', personalInfo.educationBackground],
+    ['Based in', personalInfo.contact.location],
+  ];
+
   return (
-    <SectionWrapper id="about" title="About Me">
-      <motion.div
-        variants={containerVariants}
-        className="space-y-12"
-      >
-        {/* Main Bio */}
-        <motion.div
-          variants={itemVariants}
-          className="interactive-card bg-card text-card-foreground border border-border rounded-2xl p-10 md:p-14"
-        >
-          <p className="text-[var(--muted-foreground)] text-xl leading-relaxed mb-7">
-            {personalInfo.bio}
-          </p>
-          <p className="text-[var(--muted-foreground)] text-lg leading-relaxed">
-            I bring {personalInfo.yearsOfExperience}+ years of professional experience to the table,
-            with a proven track record of delivering production-grade applications, managing
-            complex projects, and fostering collaborative team environments. My journey has been
-            defined by a commitment to continuous learning, technical excellence, and solving
-            real-world problems through elegant, scalable solutions.
-          </p>
-        </motion.div>
+    <section id="about" className="py-20 md:py-28">
+      <div className="container-x">
+        <SectionHeading
+          index="01"
+          label="About"
+          aside="A quick snapshot of who I am, how I work, and what I'm focused on right now."
+          title={
+            <>
+              Engineer by craft, <Em>leader</Em> by choice.
+            </>
+          }
+        />
 
-        {/* Highlights Grid */}
-        <motion.div
-          variants={containerVariants}
-          className="grid md:grid-cols-2 gap-7 lg:gap-8"
-        >
-          {highlights.map((highlight, index) => {
-            const Icon = highlight.icon;
-            return (
-              <motion.div
-                key={index}
-                variants={itemVariants}
-                className="group interactive-card bg-card text-card-foreground border border-border rounded-2xl p-8 transition-all"
-              >
-                <div className="flex items-start gap-5">
-                  <div className="p-4 rounded-xl bg-[var(--primary)]/15 text-[var(--primary)] group-hover:scale-125 transition-transform flex-shrink-0">
-                    <Icon size={28} />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-foreground mb-3">
-                      {highlight.title}
-                    </h3>
-                    <p className="text-[var(--muted-foreground)] text-base leading-relaxed">
-                      {highlight.description}
-                    </p>
-                  </div>
+        <div className="grid gap-16 lg:grid-cols-[1.4fr_1fr]">
+          <Reveal className="space-y-6 text-lg leading-relaxed text-dim md:text-xl">
+            <p>
+              I started my career on <span className="text-ink">June 19, 2023</span> as a Java
+              developer, and quickly grew into owning projects end-to-end — from the first
+              architecture sketch to production deploys.
+            </p>
+            <p>
+              Today I lead a team of <span className="text-ink">{personalInfo.teamSize} engineers</span>,
+              shaping the technical direction of microservice platforms built on Spring Boot, Kafka
+              and PostgreSQL, with Angular and Next.js on the front.
+            </p>
+            <p>
+              I believe great software comes from great teams: clear ownership, honest code reviews,
+              and room for every engineer to grow.
+            </p>
+          </Reveal>
+
+          <Reveal delay={0.15}>
+            <dl className="divide-y divide-line border-y border-line">
+              {facts.map(([k, v]) => (
+                <div key={k} className="flex items-baseline justify-between gap-6 py-4">
+                  <dt className="eyebrow">{k}</dt>
+                  <dd className="text-right text-ink">{v}</dd>
                 </div>
-              </motion.div>
-            );
-          })}
-        </motion.div>
+              ))}
+            </dl>
+          </Reveal>
+        </div>
 
-        {/* Key Stats */}
-        <motion.div
-          variants={itemVariants}
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-7"
-        >
-          {[
-            { label: 'Years Experience', value: '2+' },
-            { label: 'Projects Managed', value: '10+' },
-            { label: 'Technologies', value: '15+' },
-            { label: 'Team Members Led', value: 'Multiple' },
-          ].map((stat, index) => (
-            <div
-              key={index}
-              className="interactive-card bg-card text-card-foreground border border-border rounded-2xl p-7 text-center transition-colors"
+        <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {principles.map(({ icon: Icon, title, text }, i) => (
+            <Reveal
+              key={title}
+              delay={i * 0.08}
+              className="group rounded-3xl border border-line bg-surface/50 p-6 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:border-accent/40"
             >
-              <div className="text-3xl font-bold text-foreground mb-2">
-                {stat.value}
-              </div>
-              <div className="text-xs font-semibold text-[var(--muted-foreground)] uppercase tracking-wide">{stat.label}</div>
-            </div>
+              <span className="grid h-11 w-11 place-items-center rounded-2xl bg-raised text-accent transition-colors duration-300 group-hover:bg-accent-fill group-hover:text-accent-ink">
+                <Icon size={20} />
+              </span>
+              <h3 className="mt-5 text-lg font-medium tracking-tight">{title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-dim">{text}</p>
+            </Reveal>
           ))}
-        </motion.div>
-      </motion.div>
-    </SectionWrapper>
+        </div>
+      </div>
+    </section>
   );
 }

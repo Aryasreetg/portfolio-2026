@@ -33,7 +33,8 @@ export interface ExperienceEntry {
   company: string;
   companyLink?: string;
   location: string;
-  startDate: string;
+  startDate: string; // display label, e.g. "June 2023"
+  startISO: string; // exact start date, used to compute duration
   endDate: string; // "Present" or date string
   description: string;
   responsibilities: Responsibility[];
@@ -111,7 +112,8 @@ export interface PersonalInfo {
   title: string;
   subtitle: string;
   bio: string;
-  yearsOfExperience: number;
+  careerStart: string; // ISO date, used to compute years of experience
+  teamSize: string;
   currentRole: string;
   educationBackground: string;
   contact: ContactInfo;

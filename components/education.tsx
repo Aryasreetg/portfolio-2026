@@ -1,109 +1,80 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { GraduationCap, Calendar, BookOpen, Award } from 'lucide-react';
+import { Award, BarChart3, MapPin, Server, Star, Trophy, type LucideIcon } from 'lucide-react';
+import { certificationsData } from '@/data/certifications';
 import { educationData } from '@/data/education';
-import {
-  timelineContainerVariants,
-  timelineItemVariants,
-  containerVariants,
-  itemVariants,
-} from '@/lib/animations';
-import SectionWrapper from './sectionwrapper';
+import { Em, Reveal, SectionHeading } from './ui';
+
+const icons: Record<string, LucideIcon> = { Award, BarChart3, MapPin, Server, Star, Trophy };
 
 export default function Education() {
-  const getIcon = (degreeType: string) => {
-    switch (degreeType) {
-      case "Master's":
-        return <GraduationCap className="w-6 h-6" />;
-      case "Bachelor":
-        return <GraduationCap className="w-6 h-6" />;
-      case "Plus":
-        return <BookOpen className="w-6 h-6" />;
-      case "SSLC":
-        return <Award className="w-6 h-6" />;
-      default:
-        return <GraduationCap className="w-6 h-6" />;
-    }
-  };
-
-  const getDegreeType = (degree: string) => {
-    if (degree.includes("Master's")) return "Master's";
-    if (degree.includes("Bachelor")) return "Bachelor";
-    if (degree.includes("Plus")) return "Plus";
-    return "SSLC";
-  };
+  const certs = [...certificationsData].sort((a, b) => b.issueDate.localeCompare(a.issueDate));
 
   return (
-    <SectionWrapper
-      id="education"
-      title="Education"
-      subtitle="Academic background and qualifications"
-    >
-      <motion.div variants={timelineContainerVariants} className="space-y-8">
-        {educationData.map((edu, index) => {
-          const degreeType = getDegreeType(edu.degree);
-          const icon = getIcon(degreeType);
+    <section id="education" className="border-y border-line bg-surface/40 py-20 md:py-28">
+      <div className="container-x">
+        <SectionHeading
+          index="05"
+          label="Education & credentials"
+          aside="MCA from Pondicherry University with an 8.8 CGPA, plus certifications picked up along the way."
+          title={
+            <>
+              Always <Em>learning.</Em>
+            </>
+          }
+        />
 
-          return (
-            <motion.div
-              key={index}
-              variants={timelineItemVariants}
-              className="group"
-            >
-              <div className="interactive-card bg-card text-card-foreground border border-border rounded-2xl p-8 transition-all">
-                {/* Header */}
-                <div className="flex items-start gap-5 mb-6">
-                  <div className="p-4 rounded-xl bg-[var(--primary)]/15 text-[var(--primary)] group-hover:scale-125 transition-transform flex-shrink-0">
-                    {icon}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-bold text-foreground mb-2">
-                      {edu.degree}
-                    </h3>
-                    <h4 className="text-lg font-semibold text-[var(--primary)] mb-2">
-                      {edu.institution}
-                    </h4>
-                    <div className="flex flex-wrap gap-5 text-base text-[var(--muted-foreground)] font-medium">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4 text-[var(--primary)]" />
-                        <span>
-                          {edu.startDate} – {edu.endDate}
-                        </span>
-                      </div>
-                      <div className="text-emerald-500 font-bold">
-                        {edu.scoreLabel}: {edu.score}
-                      </div>
+        <div className="grid gap-16 lg:grid-cols-[1.3fr_1fr]">
+          <div>
+            <p className="eyebrow mb-6">Education</p>
+            <div className="border-b border-line">
+              {educationData.map((e, i) => (
+                <Reveal key={e.degree} delay={i * 0.06}>
+                  <div className="grid grid-cols-[1fr_auto] gap-6 border-t border-line py-7">
+                    <div>
+                      <p className="font-mono text-xs text-faint">
+                        {e.startDate} — {e.endDate}
+                      </p>
+                      <h3 className="mt-2 text-xl font-medium tracking-tight md:text-2xl">{e.degree}</h3>
+                      <p className="mt-1 text-dim">{e.institution}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-serif text-4xl italic text-accent md:text-5xl">
+                        {e.score}
+                        {e.scoreLabel === 'Percentage' && <span className="text-2xl">%</span>}
+                      </p>
+                      <p className="eyebrow mt-1">{e.scoreLabel}</p>
                     </div>
                   </div>
-                </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
 
-                {/* Coursework */}
-                <div className="mt-7 pt-7 border-t border-border">
-                  <p className="text-xs font-bold text-[var(--foreground)] mb-4 uppercase tracking-wide">
-                    Relevant Coursework
-                  </p>
-                  <motion.div
-                    variants={containerVariants}
-                    className="grid md:grid-cols-2 gap-3"
-                  >
-                    {edu.coursework.map((course, courseIndex) => (
-                      <motion.div
-                        key={courseIndex}
-                        variants={itemVariants}
-                        className="flex items-start gap-2"
-                      >
-                        <span className="text-emerald-400 mt-1">•</span>
-                        <span className="text-sm text-[var(--muted-foreground)]">{course}</span>
-                      </motion.div>
-                    ))}
-                  </motion.div>
-                </div>
-              </div>
-            </motion.div>
-          );
-        })}
-      </motion.div>
-    </SectionWrapper>
+          <div>
+            <p className="eyebrow mb-6">Certifications & awards</p>
+            <div className="space-y-3">
+              {certs.map((c, i) => {
+                const Icon = (c.icon && icons[c.icon]) || Award;
+                return (
+                  <Reveal key={c.title} delay={i * 0.05}>
+                    <div className="group flex items-start gap-4 rounded-2xl border border-line bg-canvas p-5 transition-colors hover:border-accent/40">
+                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-raised text-dim transition-colors group-hover:bg-accent-fill group-hover:text-accent-ink">
+                        <Icon size={16} />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium leading-snug text-ink">{c.title}</p>
+                        <p className="mt-1 text-sm text-dim">{c.issuer}</p>
+                      </div>
+                      <span className="font-mono text-xs text-faint">{c.issueDate}</span>
+                    </div>
+                  </Reveal>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }

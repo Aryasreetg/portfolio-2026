@@ -33,3 +33,19 @@ export function useTenure(startISO: string) {
   const months = monthsBetween(startISO, useToday());
   return { years: Math.floor(months / 12), months, label: formatDuration(months) };
 }
+
+function subscribeMinute(cb: () => void) {
+  const t = setInterval(cb, 15_000);
+  return () => clearInterval(t);
+}
+const istTime = () =>
+  new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Kolkata',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date());
+
+/** Current time in India (HH:MM). Empty during prerender. */
+export function useIndiaTime() {
+  return useSyncExternalStore(subscribeMinute, istTime, () => '');
+}

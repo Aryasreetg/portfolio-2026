@@ -1,177 +1,146 @@
 'use client';
 
-import { useState } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
-import {
-  ArrowDownRight,
-  ArrowUpRight,
-  Boxes,
-  Coffee,
-  Database,
-  Leaf,
-  MapPin,
-  Users,
-  Workflow,
-  type LucideIcon,
-} from 'lucide-react';
+import { ArrowDown, ArrowRight } from 'lucide-react';
 import { personalInfo } from '@/data/personal';
-import { skillsData } from '@/data/skills';
-import { useTenure } from '@/lib/tenure';
+import { experienceData } from '@/data/experience';
+import { useIndiaTime, useTenure, useToday } from '@/lib/tenure';
+import { cn } from '@/lib/utils';
+import { ease } from './ui';
 
-const ease = [0.22, 1, 0.36, 1] as const;
 const rise = (delay: number) => ({
-  initial: { opacity: 0, y: 40 },
+  initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 1, delay, ease },
+  transition: { duration: 0.9, delay, ease },
 });
 
-// Floating badges around the profile photo (positions relative to the photo frame)
-const badges: { icon: LucideIcon; label: string; pos: string; delay: number; hideOnMobile?: boolean }[] = [
-  { icon: Coffee, label: 'Java', pos: '-left-16 top-6', delay: 0.6 },
-  { icon: Leaf, label: 'Spring Boot', pos: '-right-14 top-16', delay: 0.75 },
-  { icon: Workflow, label: 'Kafka', pos: '-left-24 top-1/2', delay: 0.9, hideOnMobile: true },
-  { icon: Database, label: 'PostgreSQL', pos: '-right-20 top-[58%]', delay: 1.05, hideOnMobile: true },
-  { icon: Boxes, label: 'Docker', pos: '-right-6 -bottom-6', delay: 1.2 },
-  { icon: Users, label: '25+ team', pos: 'left-1/3 -top-6', delay: 1.35, hideOnMobile: true },
-];
-
-const marqueeItems = skillsData.flatMap((c) => c.skills.map((s) => s.name));
-
 export default function Hero() {
-  const [imgError, setImgError] = useState(false);
   const { years } = useTenure(personalInfo.careerStart);
-  const [first, ...rest] = personalInfo.fullName.split(' ');
+  const time = useIndiaTime();
+  const year = useToday().slice(0, 4);
+  const company = experienceData[0]?.company.split(' (')[0];
+  const roleParts = [personalInfo.title, ...personalInfo.subtitle.split('|').map((s) => s.trim())];
 
-  const stats = [
-    { value: `${years}+`, label: 'Years building\nproduction systems' },
-    { value: personalInfo.teamSize, label: 'Engineers\nled today' },
-    { value: '7', label: 'Spring Boot\nmicroservices' },
-    { value: '3', label: 'Concurrent\nprojects owned' },
+  const facts = [
+    { value: `${years}+`, label: 'years building production software' },
+    { value: personalInfo.teamSize, label: 'engineers I lead today' },
+    { value: '7', label: 'Spring Boot microservices owned' },
+    { value: '3', label: 'projects delivered in parallel' },
   ];
 
   return (
-    <section id="top" className="relative overflow-hidden pt-28 md:pt-36">
+    <section id="top" aria-labelledby="hero-title" className="pt-[72px]">
+      <div className="container-page grid items-center gap-14 pb-16 pt-12 md:pt-16 lg:grid-cols-12 lg:gap-10 lg:pb-24 lg:pt-20">
+        {/* Introduction */}
+        <div className="lg:col-span-7 lg:pr-8">
+          <motion.ul {...rise(0)} className="kicker flex flex-wrap items-center gap-x-3 gap-y-2">
+            <li>{personalInfo.contact.location}</li>
+            <li aria-hidden className="h-1 w-1 rounded-full bg-bronze" />
+            <li>
+              {personalInfo.currentRole}, {company}
+            </li>
+            <li aria-hidden className="h-1 w-1 rounded-full bg-bronze" />
+            <li>Portfolio {year}</li>
+          </motion.ul>
 
-      <div className="container-x relative">
-        <motion.div {...rise(0)} className="mb-10 flex flex-wrap items-center gap-3">
-          <span className="inline-flex items-center gap-2 rounded-full border border-line bg-surface/60 px-3.5 py-1.5 text-xs text-dim backdrop-blur">
-            <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-accent-fill" />
-            Currently leading a team of {personalInfo.teamSize} engineers
-          </span>
-          <span className="inline-flex items-center gap-1.5 text-xs text-faint">
-            <MapPin size={12} /> {personalInfo.contact.location}
-          </span>
-        </motion.div>
-
-        <div className="grid items-end gap-10 lg:grid-cols-[1fr_auto]">
-          <div>
-            <h1 className="text-[clamp(3.5rem,11vw,9.5rem)] font-medium leading-[0.88] tracking-[-0.045em]">
-              <span className="block overflow-hidden">
-                <motion.span {...rise(0.1)} className="block">
-                  {first}
-                </motion.span>
-              </span>
-              <span className="block overflow-hidden pb-2">
-                <motion.span {...rise(0.2)} className="block font-serif font-normal italic tracking-[-0.02em] text-accent">
-                  {rest.join(' ')}.
-                </motion.span>
-              </span>
-            </h1>
-
-            <motion.p
-              {...rise(0.35)}
-              className="mt-8 max-w-xl text-lg leading-relaxed text-dim md:text-xl"
-            >
-              <span className="text-ink">{personalInfo.title}</span> —{' '}
-              {personalInfo.subtitle}. {personalInfo.bio}
-            </motion.p>
-
-            <motion.div {...rise(0.45)} className="mt-10 flex flex-wrap gap-3">
-              <a href="#contact" className="btn-solid">
-                Let&apos;s talk <ArrowUpRight size={16} />
-              </a>
-              <a href="#experience" className="btn-ghost">
-                See my work <ArrowDownRight size={16} />
-              </a>
-            </motion.div>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.94, rotate: -3 }}
-            animate={{ opacity: 1, scale: 1, rotate: 2 }}
-            transition={{ duration: 1.2, delay: 0.3, ease }}
-            whileHover={{ rotate: 0 }}
-            className="relative mx-auto w-56 sm:w-64 lg:mx-0 lg:mb-4 lg:w-72"
+          <motion.h1
+            {...rise(0.08)}
+            id="hero-title"
+            className="mt-8 text-[clamp(2.75rem,5.6vw,4.75rem)] font-bold leading-[1.02] tracking-[-0.035em]"
           >
-            <div className="aspect-[4/5] overflow-hidden rounded-[28px] border border-line bg-raised">
-              {!imgError && personalInfo.profileImage ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={personalInfo.profileImage}
-                  alt={personalInfo.fullName}
-                  onError={() => setImgError(true)}
-                  className="h-full w-full object-cover grayscale-[20%] transition duration-700 hover:grayscale-0"
-                />
-              ) : (
-                <div className="grid h-full place-items-center font-serif text-7xl italic text-dim">
-                  {first[0]}
-                </div>
-              )}
-            </div>
-            {badges.map(({ icon: Icon, label, pos, delay, hideOnMobile }, i) => (
-              <motion.div
-                key={label}
-                initial={{ opacity: 0, scale: 0.6 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay, ease }}
-                className={`absolute z-10 ${pos} ${hideOnMobile ? 'hidden sm:block' : ''}`}
-              >
-                <div
-                  style={{ animation: `float-y ${5 + (i % 3)}s ease-in-out ${i * 0.4}s infinite` }}
-                  className="flex items-center gap-2 rounded-full border border-line bg-surface/80 py-1.5 pl-1.5 pr-3.5 text-xs font-medium shadow-lg backdrop-blur-md"
-                >
-                  <span className="grid h-6 w-6 place-items-center rounded-full bg-accent-fill text-accent-ink">
-                    <Icon size={13} />
+            {personalInfo.fullName}
+          </motion.h1>
+
+          <motion.p
+            {...rise(0.16)}
+            className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 font-display text-lg font-medium text-ink md:text-xl"
+          >
+            {roleParts.map((part, i) => (
+              <span key={part} className="flex items-center gap-3">
+                {i > 0 && (
+                  <span aria-hidden className="text-accent">
+                    |
                   </span>
-                  {label}
-                </div>
-              </motion.div>
+                )}
+                {part}
+              </span>
             ))}
-            {/* rotating dashed ring behind the photo */}
-            <div className="absolute -inset-8 -z-10 animate-[spin_40s_linear_infinite] rounded-full border border-dashed border-line" />
-            <div className="absolute -bottom-4 -left-6 rotate-[-6deg] rounded-full bg-accent-fill px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-accent-ink shadow-xl">
-              Since 2023
-            </div>
+          </motion.p>
+
+          <motion.p {...rise(0.24)} className="mt-8 max-w-[34rem] text-lg leading-[1.7] text-dim">
+            {personalInfo.bio}
+          </motion.p>
+
+          <motion.div {...rise(0.32)} className="mt-10 flex flex-col gap-3 sm:flex-row">
+            <a href="#contact" className="btn-primary">
+              Start a Conversation <ArrowRight size={16} aria-hidden />
+            </a>
+            <a href="#experience" className="btn-secondary">
+              Explore My Experience <ArrowDown size={16} aria-hidden />
+            </a>
           </motion.div>
         </div>
 
-        {/* Stats */}
-        <motion.dl
-          {...rise(0.55)}
-          className="mt-16 grid grid-cols-2 border-t border-line md:mt-20 md:grid-cols-4"
+        {/* Portrait */}
+        <motion.figure
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.1, delay: 0.2, ease }}
+          className="mx-auto w-full max-w-[420px] lg:col-span-5 lg:max-w-none"
         >
-          {stats.map((s, i) => (
-            <div
-              key={s.label}
-              className={`border-line py-8 ${i % 2 === 0 ? 'border-r' : ''} md:border-r md:last:border-r-0 ${i > 0 ? 'md:pl-8' : ''} ${i % 2 === 1 ? 'pl-6' : ''}`}
-            >
-              <dd className="text-5xl font-medium tracking-tight md:text-6xl">{s.value}</dd>
-              <dt className="mt-3 whitespace-pre-line text-sm leading-snug text-dim">{s.label}</dt>
+          <div className="relative">
+            {/* stone mat offset behind the frame */}
+            <div aria-hidden className="absolute -bottom-4 -right-4 left-6 top-6 bg-raised sm:-bottom-5 sm:-right-5" />
+            <div className="relative overflow-hidden bg-brand-ink">
+              <Image
+                src={personalInfo.profileImage ?? '/portrait.jpg'}
+                alt={`Portrait of ${personalInfo.fullName}, smiling, in a green blazer`}
+                width={720}
+                height={900}
+                priority
+                sizes="(min-width: 1024px) 440px, (min-width: 640px) 420px, 90vw"
+                className="h-auto w-full"
+              />
+              {/* fine bronze inset rule */}
+              <div aria-hidden className="pointer-events-none absolute inset-3 border border-brand-bronze/45" />
             </div>
-          ))}
-        </motion.dl>
+          </div>
+          <figcaption className="mt-8 flex items-start justify-between gap-4 border-t border-line pt-4 text-sm">
+            <span>
+              <span className="block font-medium text-ink">{personalInfo.fullName}</span>
+              <span className="text-dim">
+                {personalInfo.currentRole}, {company}
+              </span>
+            </span>
+            <span className="text-right text-faint">
+              {personalInfo.contact.location}
+              {time && <span className="block">{time} IST</span>}
+            </span>
+          </figcaption>
+        </motion.figure>
       </div>
 
-      {/* Tech marquee */}
-      <div className="relative border-y border-line py-5 [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
-        <div className="animate-marquee flex w-max gap-10">
-          {[...marqueeItems, ...marqueeItems].map((name, i) => (
-            <span key={i} className="flex items-center gap-10 whitespace-nowrap font-serif text-2xl italic text-dim">
-              {name}
-              <span className="text-accent not-italic">✦</span>
-            </span>
+      {/* Key figures */}
+      <div className="border-y border-line bg-surface">
+        <dl className="container-page grid grid-cols-2 lg:grid-cols-4">
+          {facts.map((f, i) => (
+            <div
+              key={f.label}
+              className={cn(
+                'flex flex-col-reverse gap-2 py-8 lg:py-10',
+                i % 2 === 1 && 'pl-6 sm:pl-10',
+                i % 2 === 0 && 'border-r border-line pr-6',
+                i < 2 && 'border-b border-line lg:border-b-0',
+                i === 1 && 'lg:border-r lg:pr-6',
+                i === 2 && 'lg:pl-10',
+              )}
+            >
+              <dt className="max-w-[12rem] text-sm leading-snug text-dim">{f.label}</dt>
+              <dd className="font-display text-4xl font-semibold tracking-[-0.03em] md:text-5xl">{f.value}</dd>
+            </div>
           ))}
-        </div>
+        </dl>
       </div>
     </section>
   );

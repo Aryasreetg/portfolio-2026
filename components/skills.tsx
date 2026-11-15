@@ -1,89 +1,111 @@
 'use client';
 
 import { skillsData } from '@/data/skills';
-import type { Skill } from '@/lib/types';
-import { Em, Reveal, SectionHeading } from './ui';
+import type { Skill, SkillCategory } from '@/lib/types';
+import { cn } from '@/lib/utils';
+import { Reveal, Section } from './ui';
 
-const levelDots: Record<Skill['level'], number> = { intermediate: 1, advanced: 2, expert: 3 };
+const LEADERSHIP = 'Engineering Leadership';
 
-function Level({ level }: { level: Skill['level'] }) {
+const levelText: Record<Skill['level'], string> = {
+  expert: 'Daily use',
+  advanced: 'Regular use',
+  intermediate: 'Working knowledge',
+};
+
+/** A quiet marker: filled = daily use, outlined = regular use, none = working knowledge. */
+function Marker({ level }: { level: Skill['level'] }) {
   return (
-    <span className="flex gap-1" aria-label={level} title={level}>
-      {[1, 2, 3].map((n) => (
-        <span
-          key={n}
-          className={`h-1.5 w-1.5 rounded-full ${n <= levelDots[level] ? 'bg-accent' : 'bg-line'}`}
-        />
+    <span
+      aria-hidden
+      className={cn(
+        'mt-[9px] h-[7px] w-[7px] shrink-0 rounded-full',
+        level === 'expert' && 'bg-accent-text',
+        level === 'advanced' && 'border border-accent-text',
+        level === 'intermediate' && 'border border-dashed border-faint',
+      )}
+    />
+  );
+}
+
+function SkillList({ skills, columns }: { skills: Skill[]; columns?: boolean }) {
+  return (
+    <ul className={cn('space-y-2', columns && 'sm:grid sm:grid-cols-2 sm:gap-x-8 sm:space-y-0 sm:gap-y-2 lg:grid-cols-5')}>
+      {skills.map((s) => (
+        <li key={s.name} className="flex gap-3 text-[15px]" title={s.description}>
+          <Marker level={s.level} />
+          <span>
+            <span className="text-ink">{s.name}</span>
+            <span className="sr-only"> — {levelText[s.level]}</span>
+          </span>
+        </li>
       ))}
-    </span>
+    </ul>
+  );
+}
+
+function Category({ cat, index }: { cat: SkillCategory; index: number }) {
+  return (
+    <div className="h-full bg-surface p-7 md:p-8">
+      <p aria-hidden className="text-sm font-medium text-bronze">{String(index + 1).padStart(2, '0')}</p>
+      <h3 className="mt-3 text-xl font-semibold tracking-tight">{cat.category}</h3>
+      {cat.summary && <p className="mt-2 text-[15px] leading-relaxed text-dim">{cat.summary}</p>}
+      <div className="mt-6 border-t border-line pt-5">
+        <SkillList skills={cat.skills} />
+      </div>
+    </div>
   );
 }
 
 export default function Skills() {
+  const technical = skillsData.filter((c) => c.category !== LEADERSHIP);
+  const leadership = skillsData.find((c) => c.category === LEADERSHIP);
+
   return (
-    <section id="skills" className="border-y border-line bg-surface/40 py-20 md:py-28">
-      <div className="container-x">
-        <SectionHeading
-          index="03"
-          label="Toolkit"
-          aside="Backend-first, full-stack capable. Three dots means expert, one means solid working knowledge."
-          title={
-            <>
-              The stack I use to <Em>ship</Em> reliably.
-            </>
-          }
-        />
-
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {skillsData.map((cat, i) => (
-            <Reveal
-              key={cat.category}
-              delay={(i % 3) * 0.08}
-              className={`group rounded-3xl border border-line bg-canvas p-7 transition-all duration-500 hover:-translate-y-1 hover:border-accent/40 ${
-                i === 0 ? 'lg:row-span-3' : ''
-              }`}
-            >
-              <div className="mb-8 flex items-center justify-between">
-                <h3 className="text-lg font-medium tracking-tight">{cat.category}</h3>
-                <span className="font-mono text-xs text-faint">
-                  {String(cat.skills.length).padStart(2, '0')}
-                </span>
-              </div>
-              <ul className="space-y-1">
-                {cat.skills.map((s) => (
-                  <li
-                    key={s.name}
-                    className="flex items-center justify-between gap-4 border-b border-line py-3 last:border-0"
-                  >
-                    <div>
-                      <p className="text-ink">{s.name}</p>
-                      {i === 0 && <p className="mt-1 text-sm text-dim">{s.description}</p>}
-                    </div>
-                    <Level level={s.level} />
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
+    <Section
+      id="toolkit"
+      index="03"
+      label="Toolkit"
+      tone="stone"
+      title="A backend-first toolkit, with the range to lead a full-stack team."
+      intro={
+        <>
+          Grouped by how I use them, not by buzzword.
+          <span className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+            {(['expert', 'advanced', 'intermediate'] as const).map((l) => (
+              <span key={l} className="flex items-center gap-2">
+                <Marker level={l} />
+                <span className="pt-[3px]">{levelText[l]}</span>
+              </span>
+            ))}
+          </span>
+        </>
+      }
+    >
+      <Reveal>
+        <div className="grid gap-px border border-line bg-line md:grid-cols-2 lg:grid-cols-3">
+          {technical.map((cat, i) => (
+            <Category key={cat.category} cat={cat} index={i} />
           ))}
-
-          <Reveal className="flex flex-col justify-between rounded-3xl border border-dashed border-line p-7">
-            <div>
-              <p className="eyebrow mb-5">How to read this</p>
-              <ul className="space-y-3 text-sm text-dim">
-                {(['expert', 'advanced', 'intermediate'] as const).map((l) => (
-                  <li key={l} className="flex items-center gap-3 capitalize">
-                    <Level level={l} /> {l}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <p className="mt-8 font-serif text-2xl italic leading-snug text-ink">
-              Always picking up <span className="text-accent">something new.</span>
-            </p>
-          </Reveal>
         </div>
+      </Reveal>
 
-      </div>
-    </section>
+      {leadership && (
+        <Reveal className="mt-px">
+          <div className="grid gap-8 border border-t-0 border-line bg-canvas p-7 md:p-8 lg:grid-cols-12 lg:items-start">
+            <div className="lg:col-span-4">
+              <p aria-hidden className="text-sm font-medium text-bronze">{String(technical.length + 1).padStart(2, '0')}</p>
+              <h3 className="mt-3 text-xl font-semibold tracking-tight">{leadership.category}</h3>
+              {leadership.summary && (
+                <p className="mt-2 text-[15px] leading-relaxed text-dim">{leadership.summary}</p>
+              )}
+            </div>
+            <div className="lg:col-span-8 lg:border-l lg:border-line lg:pl-8 lg:pt-1">
+              <SkillList skills={leadership.skills} columns />
+            </div>
+          </div>
+        </Reveal>
+      )}
+    </Section>
   );
 }

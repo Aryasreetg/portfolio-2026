@@ -1,80 +1,109 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowUpRight, Check, Copy, Github, Instagram, Linkedin, type LucideIcon } from 'lucide-react';
+import { ArrowDownToLine, ArrowUpRight, Check, Copy, Mail } from 'lucide-react';
 import { personalInfo } from '@/data/personal';
-import { useToday } from '@/lib/tenure';
-import { Reveal } from './ui';
-
-const icons: Record<string, LucideIcon> = { Github, Linkedin, Instagram };
+import { useIndiaTime, useToday } from '@/lib/tenure';
+import { Accent, Reveal } from './ui';
 
 export default function Contact() {
   const [copied, setCopied] = useState(false);
-  const { email, socialLinks } = personalInfo.contact;
+  const { email, socialLinks, location } = personalInfo.contact;
   const year = useToday().slice(0, 4);
+  const time = useIndiaTime();
 
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(email);
       setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
+      setTimeout(() => setCopied(false), 2000);
     } catch {
       window.location.href = `mailto:${email}`;
     }
   };
 
   return (
-    <section id="contact" className="relative overflow-hidden pt-20 md:pt-28">
-      <div className="pointer-events-none absolute bottom-[-200px] left-1/2 h-[500px] w-[900px] -translate-x-1/2 rounded-full bg-accent-fill/10 blur-[140px]" />
+    <section id="contact" aria-labelledby="contact-title" className="tone-ink bg-canvas text-ink">
+      <div className="container-page pt-24 md:pt-32">
+        <Reveal className="grid gap-14 lg:grid-cols-12 lg:gap-10">
+          <div className="lg:col-span-7">
+            <p className="kicker flex items-center gap-3">
+              <span className="text-accent-text">06</span>
+              <span aria-hidden className="h-px w-8 bg-bronze" />
+              <span>Contact</span>
+            </p>
+            <h2
+              id="contact-title"
+              className="mt-6 text-[clamp(2.25rem,4.4vw,3.5rem)] font-semibold leading-[1.08] tracking-[-0.03em]"
+            >
+              Have a team to grow or a system to build? <Accent>Let’s talk.</Accent>
+            </h2>
+            <p className="mt-6 max-w-lg text-lg leading-relaxed text-dim">
+              Whether it’s a role, a project, or a conversation about engineering leadership, my inbox is
+              open.
+            </p>
 
-      <div className="container-x relative">
-        <Reveal>
-          <div className="mb-8 flex items-center gap-4">
-            <span className="eyebrow text-accent">06</span>
-            <span className="h-px w-10 bg-line" />
-            <span className="eyebrow">Contact</span>
+            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+              <a href={`mailto:${email}`} className="btn-primary">
+                <Mail size={16} aria-hidden /> Email me
+              </a>
+              <button onClick={copy} className="btn-secondary">
+                {copied ? <Check size={16} aria-hidden /> : <Copy size={16} aria-hidden />}
+                <span aria-live="polite">{copied ? 'Address copied' : 'Copy email address'}</span>
+              </button>
+            </div>
           </div>
-          <h2 className="text-[clamp(3rem,9vw,8rem)] font-medium leading-[0.9] tracking-[-0.045em]">
-            Let&apos;s build
-            <br />
-            <span className="font-serif font-normal italic text-accent">something great.</span>
-          </h2>
+
+          <div className="lg:col-span-4 lg:col-start-9 lg:pt-14">
+            <dl className="border-t border-line-strong">
+              <div className="border-b border-line py-5">
+                <dt className="text-sm text-faint">Email</dt>
+                <dd className="mt-1">
+                  <a href={`mailto:${email}`} className="link break-all text-[17px] text-ink">
+                    {email}
+                  </a>
+                </dd>
+              </div>
+              <div className="border-b border-line py-5">
+                <dt className="text-sm text-faint">Elsewhere</dt>
+                <dd className="mt-2">
+                  <ul className="space-y-2">
+                    {socialLinks.map((l) => (
+                      <li key={l.name}>
+                        <a
+                          href={l.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="link inline-flex items-center gap-1.5 text-[17px] text-ink"
+                        >
+                          {l.name} <ArrowUpRight size={15} aria-hidden className="text-bronze" />
+                        </a>
+                      </li>
+                    ))}
+                    <li>
+                      <a href={personalInfo.resume} download="Aryasree-TG-Resume.pdf" className="link inline-flex items-center gap-1.5 text-[17px] text-ink">
+                        Résumé (PDF) <ArrowDownToLine size={15} aria-hidden className="text-bronze" />
+                      </a>
+                    </li>
+                  </ul>
+                </dd>
+              </div>
+              <div className="border-b border-line py-5">
+                <dt className="text-sm text-faint">Based in</dt>
+                <dd className="mt-1 text-[17px] text-ink">
+                  {location}
+                  <span className="block text-sm text-dim">{time ? `${time} IST (UTC+5:30)` : 'IST (UTC+5:30)'}</span>
+                </dd>
+              </div>
+            </dl>
+          </div>
         </Reveal>
 
-        <Reveal delay={0.1} className="mt-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-          <div className="flex flex-wrap items-center gap-3">
-            <a href={`mailto:${email}`} className="btn-solid text-base">
-              {email} <ArrowUpRight size={16} />
-            </a>
-            <button onClick={copy} className="btn-ghost" aria-label="Copy email address">
-              {copied ? <Check size={16} /> : <Copy size={16} />}
-              {copied ? 'Copied' : 'Copy'}
-            </button>
-          </div>
-          <div className="flex gap-2">
-            {socialLinks.map((l) => {
-              const Icon = icons[l.icon];
-              return (
-                <a
-                  key={l.name}
-                  href={l.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={l.name}
-                  className="grid h-12 w-12 place-items-center rounded-full border border-line text-dim transition-all duration-300 hover:-translate-y-1 hover:border-accent-fill hover:bg-accent-fill hover:text-accent-ink"
-                >
-                  {Icon ? <Icon size={18} /> : l.name[0]}
-                </a>
-              );
-            })}
-          </div>
-        </Reveal>
-
-        <footer className="mt-20 flex flex-col gap-3 border-t border-line py-8 text-sm text-faint md:flex-row md:items-center md:justify-between">
+        <footer className="mt-28 flex flex-col gap-4 border-t border-line py-8 text-sm text-faint md:flex-row md:items-center md:justify-between">
           <p>
-            © {year} {personalInfo.fullName}. Designed & built with care.
+            © {year} {personalInfo.fullName}
           </p>
-          <a href="#top" className="link-underline w-fit">
+          <a href="#top" className="link w-fit text-dim hover:text-ink">
             Back to top ↑
           </a>
         </footer>

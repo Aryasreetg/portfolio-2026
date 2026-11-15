@@ -1,145 +1,227 @@
 'use client';
 
-import { useState } from 'react';
+import { Fragment, useId, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Minus, Plus } from 'lucide-react';
 import { experienceData } from '@/data/experience';
-import type { ExperienceEntry } from '@/lib/types';
+import { personalInfo } from '@/data/personal';
+import type { ExperienceEntry, FocusArea } from '@/lib/types';
 import { useTenure } from '@/lib/tenure';
-import { Em, Reveal, SectionHeading } from './ui';
+import { cn } from '@/lib/utils';
+import { Accent, ease, Reveal, Section } from './ui';
 
-const VISIBLE = 6;
+const AREA_ORDER: FocusArea[] = ['Leadership', 'Backend', 'Architecture', 'Distributed systems', 'Frontend', 'Delivery'];
 
-function Role({ job }: { job: ExperienceEntry }) {
-  const [expanded, setExpanded] = useState(false);
-  const { label } = useTenure(job.startISO);
-  const current = job.endDate === 'Present';
-  const shown = expanded ? job.responsibilities : job.responsibilities.slice(0, VISIBLE);
-  const hidden = job.responsibilities.length - VISIBLE;
+/** Responsibilities grouped by focus area, shown as accessible tabs. */
+function FocusAreas({ job }: { job: ExperienceEntry }) {
+  const areas = AREA_ORDER.filter((a) => job.responsibilities.some((r) => r.area === a));
+  const [active, setActive] = useState<FocusArea>(areas[0]);
+  const tabs = useRef<(HTMLButtonElement | null)[]>([]);
+  const uid = useId();
+  const items = job.responsibilities.filter((r) => r.area === active);
+
+  const onKeyDown = (e: React.KeyboardEvent, i: number) => {
+    const keys: Record<string, number> = {
+      ArrowDown: (i + 1) % areas.length,
+      ArrowRight: (i + 1) % areas.length,
+      ArrowUp: (i - 1 + areas.length) % areas.length,
+      ArrowLeft: (i - 1 + areas.length) % areas.length,
+      Home: 0,
+      End: areas.length - 1,
+    };
+    const next = keys[e.key];
+    if (next === undefined) return;
+    e.preventDefault();
+    setActive(areas[next]);
+    tabs.current[next]?.focus();
+  };
 
   return (
-    <article className="grid gap-10 border-t border-line pt-10 lg:grid-cols-[280px_1fr] lg:gap-16">
-      <Reveal className="lg:sticky lg:top-28 lg:self-start">
-        <p className="eyebrow mb-3 flex items-center gap-2">
-          {current && <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-accent-fill" />}
-          {job.startDate} — {job.endDate}
-        </p>
-        <p className="font-serif text-3xl italic text-accent">{label}</p>
-        <p className="mt-6 text-ink">{job.company}</p>
-        <p className="text-sm text-dim">{job.location}</p>
+    <div className="grid gap-10 lg:grid-cols-12">
+      <div
+        role="tablist"
+        aria-label="Focus areas"
+        className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-2 sm:mx-0 sm:flex-wrap sm:px-0 lg:col-span-4 lg:flex-col lg:flex-nowrap lg:gap-0 lg:border-t lg:border-line lg:pb-0"
+      >
+        {areas.map((a, i) => {
+          const selected = a === active;
+          const count = job.responsibilities.filter((r) => r.area === a).length;
+          return (
+            <button
+              key={a}
+              ref={(el) => {
+                tabs.current[i] = el;
+              }}
+              role="tab"
+              id={`${uid}-tab-${i}`}
+              aria-selected={selected}
+              aria-controls={`${uid}-panel`}
+              tabIndex={selected ? 0 : -1}
+              onClick={() => setActive(a)}
+              onKeyDown={(e) => onKeyDown(e, i)}
+              className={cn(
+                'flex shrink-0 items-center justify-between gap-6 whitespace-nowrap border px-4 py-2.5 text-left text-[15px] transition-colors duration-300',
+                'lg:border-0 lg:border-b lg:border-line lg:px-0 lg:py-4',
+                selected ? 'border-line-strong text-ink' : 'border-line text-dim hover:text-ink',
+              )}
+            >
+              <span className="flex items-center gap-3">
+                <span
+                  aria-hidden
+                  className={cn(
+                    'hidden h-px transition-all duration-500 lg:block',
+                    selected ? 'w-6 bg-bronze' : 'w-0',
+                  )}
+                />
+                {a}
+              </span>
+              <span className="text-xs tabular-nums text-faint">{count}</span>
+            </button>
+          );
+        })}
+      </div>
 
-        {current && (
-          <>
-            <div className="mt-8 grid grid-cols-3 gap-2">
-              {[
-                ['25+', 'Engineers'],
-                ['3', 'Projects'],
-                ['7', 'Services'],
-              ].map(([v, l]) => (
-                <div key={l} className="rounded-2xl border border-line bg-surface/50 p-3 text-center">
-                  <p className="text-2xl font-medium tracking-tight">{v}</p>
-                  <p className="mt-0.5 text-[11px] text-dim">{l}</p>
-                </div>
-              ))}
+      <div
+        role="tabpanel"
+        id={`${uid}-panel`}
+        aria-labelledby={`${uid}-tab-${areas.indexOf(active)}`}
+        className="lg:col-span-7 lg:col-start-6"
+      >
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.ul
+            key={active}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.35, ease }}
+            className="space-y-10"
+          >
+            {items.map((r) => (
+              <li key={r.title} className="border-l border-line-strong pl-6">
+                <h5 className="font-display text-lg font-semibold tracking-tight">{r.title}</h5>
+                <p className="mt-2 text-[16px] leading-[1.7] text-dim">{r.description}</p>
+              </li>
+            ))}
+          </motion.ul>
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
+
+function Role({ job }: { job: ExperienceEntry }) {
+  const { label } = useTenure(job.startISO);
+  const current = job.endDate === 'Present';
+  const milestones = job.milestones ?? [];
+
+  return (
+    <article>
+      {/* Role header */}
+      <Reveal className="grid gap-10 border-t border-line-strong pt-10 lg:grid-cols-12">
+        <div className="lg:col-span-5">
+          <p className="flex items-center gap-2 text-sm text-accent-text">
+            {current && <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-accent-text" />}
+            {current ? 'Current role' : 'Previous role'}
+          </p>
+          <h3 className="mt-3 text-[clamp(1.5rem,2.4vw,2rem)] font-semibold leading-tight tracking-[-0.02em]">
+            {job.title}
+          </h3>
+          <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-4 text-[15px]">
+            <div className="col-span-2">
+              <dt className="sr-only">Company</dt>
+              <dd className="text-ink">{job.company}</dd>
             </div>
-            <div className="mt-6 flex items-center gap-3">
-              <div className="flex -space-x-2">
-                {['#c8f03c', '#3dd6c6', '#8b7cf6', '#f59e7b', '#efeee8'].map((c) => (
-                  <span
-                    key={c}
-                    className="h-8 w-8 rounded-full border-2 border-canvas"
-                    style={{ background: `linear-gradient(135deg, ${c}, color-mix(in srgb, ${c} 40%, #000))` }}
-                  />
-                ))}
-                <span className="grid h-8 w-8 place-items-center rounded-full border-2 border-canvas bg-raised font-mono text-[10px] text-dim">
-                  +20
-                </span>
-              </div>
-              <p className="text-xs leading-snug text-dim">
-                The team I lead,
-                <br />
-                across backend &amp; frontend
-              </p>
+            <div>
+              <dt className="text-faint">Period</dt>
+              <dd className="mt-1 text-ink">
+                {job.startDate} — {job.endDate}
+              </dd>
             </div>
-          </>
-        )}
+            <div>
+              <dt className="text-faint">Tenure</dt>
+              <dd className="mt-1 text-ink">{label}</dd>
+            </div>
+            <div className="col-span-2">
+              <dt className="text-faint">Location</dt>
+              <dd className="mt-1 text-ink">{job.location}</dd>
+            </div>
+          </dl>
+        </div>
+        <p className="text-lg leading-[1.75] text-dim lg:col-span-6 lg:col-start-7">{job.description}</p>
       </Reveal>
 
-      <div>
-        <Reveal>
-          <h3 className="text-3xl font-medium tracking-tight md:text-4xl">{job.title}</h3>
-          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-dim">{job.description}</p>
+      {/* Growth timeline */}
+      {milestones.length > 0 && (
+        <Reveal className="mt-20">
+          <h4 className="kicker">How the role grew</h4>
+          <ol className="relative mt-8 grid gap-10 md:grid-cols-3 md:gap-8">
+            <span
+              aria-hidden
+              className="absolute bottom-2 left-[5px] top-2 w-px bg-line-strong md:bottom-auto md:left-0 md:right-0 md:top-[5px] md:h-px md:w-auto"
+            />
+            {milestones.map((m, i) => {
+              const last = i === milestones.length - 1;
+              return (
+                <li key={m.title} className="relative pl-8 md:pl-0 md:pt-10">
+                  <span
+                    aria-hidden
+                    className={cn(
+                      'absolute left-0 top-1.5 h-[11px] w-[11px] rounded-full border md:top-0',
+                      last ? 'border-accent-text bg-accent-text' : 'border-bronze bg-canvas',
+                    )}
+                  />
+                  <p className={cn('text-sm font-medium', last ? 'text-accent-text' : 'text-bronze')}>{m.when}</p>
+                  <p className="mt-2 font-display text-lg font-semibold tracking-tight">{m.title}</p>
+                  <p className="mt-2 text-[15px] leading-relaxed text-dim">{m.description}</p>
+                </li>
+              );
+            })}
+          </ol>
         </Reveal>
+      )}
 
-        <ol className="mt-12 grid gap-px overflow-hidden rounded-3xl border border-line bg-line sm:grid-cols-2">
-          <AnimatePresence initial={false}>
-            {shown.map((r, i) => (
-              <motion.li
-                key={r.title}
-                layout
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className={`group bg-canvas p-7 transition-colors duration-300 hover:bg-surface ${
-                  i === shown.length - 1 && shown.length % 2 === 1 ? 'sm:col-span-2' : ''
-                }`}
-              >
-                <span className="font-mono text-xs text-faint transition-colors group-hover:text-accent">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <h4 className="mt-3 text-lg font-medium tracking-tight">{r.title}</h4>
-                <p className="mt-2 text-sm leading-relaxed text-dim">{r.description}</p>
-              </motion.li>
-            ))}
-          </AnimatePresence>
-        </ol>
+      <Reveal className="mt-24">
+        <h4 className="kicker mb-8">What the work involves</h4>
+        <FocusAreas job={job} />
+      </Reveal>
 
-        {hidden > 0 && (
-          <button
-            onClick={() => setExpanded((e) => !e)}
-            className="btn-ghost mt-6"
-            aria-expanded={expanded}
-          >
-            {expanded ? <Minus size={14} /> : <Plus size={14} />}
-            {expanded ? 'Show less' : `${hidden} more highlights`}
-          </button>
-        )}
-
-        <Reveal className="mt-12">
-          <p className="eyebrow mb-4">Stack</p>
-          <div className="flex flex-wrap gap-2">
-            {job.technologies.map((t) => (
-              <span key={t} className="chip">
-                {t}
-              </span>
-            ))}
-          </div>
-        </Reveal>
-      </div>
+      <Reveal className="mt-16 grid gap-3 border-t border-line pt-6 md:grid-cols-12">
+        <h4 className="kicker pt-1 md:col-span-3">Stack</h4>
+        <p className="text-[15px] leading-loose text-dim md:col-span-9">
+          {job.technologies.map((t, i) => (
+            <Fragment key={t}>
+              <span className="whitespace-nowrap">
+                <span className="text-ink">{t}</span>
+                {i < job.technologies.length - 1 && <span className="pl-2 text-bronze">·</span>}
+              </span>{' '}
+            </Fragment>
+          ))}
+        </p>
+      </Reveal>
     </article>
   );
 }
 
 export default function Experience() {
+  const { years } = useTenure(personalInfo.careerStart);
+
   return (
-    <section id="experience" className="py-20 md:py-28">
-      <div className="container-x">
-        <SectionHeading
-          index="02"
-          label="Experience"
-          aside="From writing my first Spring Boot service to leading a team of 25+ engineers — all at Deeshaa."
-          title={
-            <>
-              From first commit to <Em>leading the team.</Em>
-            </>
-          }
-        />
-        <div className="space-y-24">
-          {experienceData.map((job) => (
-            <Role key={job.company + job.title} job={job} />
-          ))}
-        </div>
+    <Section
+      id="experience"
+      index="02"
+      label="Experience"
+      tone="ink"
+      title={
+        <>
+          Leading engineers, <Accent>still close to the code.</Accent>
+        </>
+      }
+      intro={`${years}+ years at one company — from my first Spring Boot service to leading a team of ${personalInfo.teamSize} engineers.`}
+    >
+      <div className="space-y-28">
+        {experienceData.map((job) => (
+          <Role key={job.company + job.title} job={job} />
+        ))}
       </div>
-    </section>
+    </Section>
   );
 }

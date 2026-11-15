@@ -1,88 +1,118 @@
 'use client';
 
-import { Compass, MessagesSquare, ShieldCheck, Sprout } from 'lucide-react';
 import { personalInfo } from '@/data/personal';
 import { useTenure } from '@/lib/tenure';
-import { Em, Reveal, SectionHeading } from './ui';
+import { Accent, Reveal, Section } from './ui';
+
+const chapters = [
+  {
+    heading: 'The journey',
+    body: (
+      <>
+        I joined Deeshaa Limited on <strong className="font-medium text-ink">June 19, 2023</strong> as a Java
+        developer, fresh from an MCA at Pondicherry University. Before long I was owning projects end to end —
+        three at once — from the first architecture sketch to production deploys.
+      </>
+    ),
+  },
+  {
+    heading: 'How I engineer',
+    body: (
+      <>
+        Most of my work lives in the backend: Spring Boot microservices, PostgreSQL schemas, REST and gRPC
+        APIs, and Kafka wherever services shouldn’t have to wait on each other. When something breaks, I start
+        with the evidence — a Zipkin trace across services, then the query plan — before reaching for a
+        rewrite.
+      </>
+    ),
+  },
+  {
+    heading: 'How I lead',
+    body: (
+      <>
+        Today I lead a team of <strong className="font-medium text-ink">25+ engineers</strong> across backend
+        and frontend. My job is to make the path clear: break work into pieces people can own, review code
+        honestly, and give engineers room to grow into bigger problems.
+      </>
+    ),
+  },
+];
 
 const principles = [
-  { icon: Compass, title: 'Clear direction', text: 'Everyone knows what we are building, why, and what "done" looks like.' },
-  { icon: ShieldCheck, title: 'Quality by default', text: 'Thoughtful reviews, tests and observability baked in, not bolted on.' },
-  { icon: MessagesSquare, title: 'Open communication', text: 'Problems surface early. Decisions are written down and shared.' },
-  { icon: Sprout, title: 'Grow the team', text: 'Mentoring and ownership so every engineer levels up over time.' },
+  { title: 'Clear direction', text: 'Everyone knows what we’re building, why it matters, and what “done” looks like.' },
+  { title: 'Quality by default', text: 'Reviews, tests and observability are part of the work, not an afterthought.' },
+  { title: 'Open communication', text: 'Problems surface early. Decisions are written down and shared.' },
+  { title: 'Grow the team', text: 'Mentoring and real ownership, so every engineer leaves a project stronger.' },
 ];
 
 export default function About() {
   const { label } = useTenure(personalInfo.careerStart);
 
   const facts = [
-    ['Role', personalInfo.currentRole],
-    ['Team', `${personalInfo.teamSize} engineers`],
+    ['Role', `${personalInfo.currentRole}, ${personalInfo.teamSize} engineers`],
     ['Experience', label],
     ['Education', personalInfo.educationBackground],
     ['Based in', personalInfo.contact.location],
   ];
 
   return (
-    <section id="about" className="py-20 md:py-28">
-      <div className="container-x">
-        <SectionHeading
-          index="01"
-          label="About"
-          aside="A quick snapshot of who I am, how I work, and what I'm focused on right now."
-          title={
-            <>
-              Engineer by craft, <Em>leader</Em> by choice.
-            </>
-          }
-        />
-
-        <div className="grid gap-16 lg:grid-cols-[1.4fr_1fr]">
-          <Reveal className="space-y-6 text-lg leading-relaxed text-dim md:text-xl">
-            <p>
-              I started my career on <span className="text-ink">June 19, 2023</span> as a Java
-              developer, and quickly grew into owning projects end-to-end — from the first
-              architecture sketch to production deploys.
+    <Section
+      id="about"
+      index="01"
+      label="About"
+      title={
+        <>
+          From writing services to shaping <Accent>how a team builds them.</Accent>
+        </>
+      }
+      intro="A software engineer who grew into leadership without leaving the code behind."
+    >
+      <div className="grid gap-16 lg:grid-cols-12 lg:gap-10">
+        {/* Pull quote + facts */}
+        <Reveal className="lg:col-span-5">
+          <blockquote className="border-l-2 border-bronze pl-6">
+            <p className="font-serif text-[clamp(1.75rem,2.6vw,2.25rem)] leading-[1.25] text-ink">
+              Calm delivery comes from clear architecture and a team that trusts each other.
             </p>
-            <p>
-              Today I lead a team of <span className="text-ink">{personalInfo.teamSize} engineers</span>,
-              shaping the technical direction of microservice platforms built on Spring Boot, Kafka
-              and PostgreSQL, with Angular and Next.js on the front.
-            </p>
-            <p>
-              I believe great software comes from great teams: clear ownership, honest code reviews,
-              and room for every engineer to grow.
-            </p>
-          </Reveal>
+          </blockquote>
 
-          <Reveal delay={0.15}>
-            <dl className="divide-y divide-line border-y border-line">
-              {facts.map(([k, v]) => (
-                <div key={k} className="flex items-baseline justify-between gap-6 py-4">
-                  <dt className="eyebrow">{k}</dt>
-                  <dd className="text-right text-ink">{v}</dd>
-                </div>
-              ))}
-            </dl>
-          </Reveal>
-        </div>
+          <dl className="mt-12 border-t border-line">
+            {facts.map(([k, v]) => (
+              <div key={k} className="grid grid-cols-[7rem_1fr] gap-4 border-b border-line py-4 text-[15px]">
+                <dt className="text-faint">{k}</dt>
+                <dd className="text-ink">{v}</dd>
+              </div>
+            ))}
+          </dl>
+        </Reveal>
 
-        <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {principles.map(({ icon: Icon, title, text }, i) => (
-            <Reveal
-              key={title}
-              delay={i * 0.08}
-              className="group rounded-3xl border border-line bg-surface/50 p-6 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:border-accent/40"
-            >
-              <span className="grid h-11 w-11 place-items-center rounded-2xl bg-raised text-accent transition-colors duration-300 group-hover:bg-accent-fill group-hover:text-accent-ink">
-                <Icon size={20} />
-              </span>
-              <h3 className="mt-5 text-lg font-medium tracking-tight">{title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-dim">{text}</p>
+        {/* Narrative */}
+        <div className="space-y-12 lg:col-span-6 lg:col-start-7">
+          {chapters.map((c, i) => (
+            <Reveal key={c.heading} delay={i * 0.05}>
+              <h3 className="text-lg font-semibold tracking-tight">{c.heading}</h3>
+              <p className="mt-3 text-[17px] leading-[1.75] text-dim">{c.body}</p>
             </Reveal>
           ))}
         </div>
       </div>
-    </section>
+
+      {/* Principles */}
+      <Reveal className="mt-24">
+        <h3 className="kicker">Principles I work by</h3>
+        <ol className="mt-6 grid border-t border-line-strong sm:grid-cols-2 lg:grid-cols-4">
+          {principles.map((p, i) => (
+            <li
+              key={p.title}
+              className="border-b border-line py-7 sm:pr-8 lg:border-b-0 lg:border-r lg:px-6 lg:first:pl-0 lg:last:border-r-0"
+            >
+              <span className="font-display text-sm font-semibold text-accent-text">0{i + 1}</span>
+              <p className="mt-4 font-display text-[17px] font-semibold tracking-tight">{p.title}</p>
+              <p className="mt-2 text-[15px] leading-relaxed text-dim">{p.text}</p>
+            </li>
+          ))}
+        </ol>
+      </Reveal>
+    </Section>
   );
 }
